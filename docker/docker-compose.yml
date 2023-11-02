@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: toor
+      POSTGRES_DB: user_api
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+
+  webapp:
+    image: thomas1212/front_nuxt:latest
+    ports:
+      - "3001:3001"
+      - "3000:3000"
+      - "24678:24678"
+      - "2222:22"
+    environment:
+      NODE_ENV: development
+    #volumes:
+    #  - /Users/thomas/Desktop/REPO EPITECH/T-POO-700-NCY_4/norman:/webapp
+    #  - /webapp/node_modules
+    depends_on:
+      - postgres
+
+  phoenix:
+    image: thomas1212/back_elixir:latest
+    ports:
+      - "4000:4000"
+    environment:
+      MIX_ENV: dev
+    #volumes:
+    #  - /Users/thomas/Desktop/REPO EPITECH/T-POO-700-NCY_4/users_api:/app
+    depends_on:
+      - postgres
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_SCHEDULE=*/5 * * * *
+
+volumes:
+  pgdata:

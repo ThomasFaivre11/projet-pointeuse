@@ -1,0 +1,7 @@
+<%= for clock <- @clocks do %>
+{
+    "id": "<%= clock.id %>",
+    "time": "<%= clock.time %>",
+    "user_id": "<%= clock.user_id %>"
+}
+<% end %>
