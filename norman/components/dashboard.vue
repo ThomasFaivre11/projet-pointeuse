@@ -1,13 +1,13 @@
 <script setup lang="ts">
 const { getWorkingTime } = workingtimes();
 
-/*async function executeWorkingTime(){
+async function executeWorkingTime(){
   // const result = await getWorkingTime("0b13584d-850a-429f-960f-621a488b3793","bd53579a-2c28-4ded-80b6-1ae5c01daf2c");
   getWorkingTime("0b13584d-850a-429f-960f-621a488b3793", "bd53579a-2c28-4ded-80b6-1ae5c01daf2c")
       .then(result => {
         console.log(result);
       });
-}*/
+}
 
 const options = ref({
 	chart: {
