@@ -1,0 +1,36 @@
+name: Qodana
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Cache Qodana directories
+        uses: actions/cache@v3
+        with:
+          path: |
+            /runner/_work/_temp/qodana/caches
+            /runner/_work/_temp/qodana/results
+          key: qodana-${{ github.sha }}
+          restore-keys: |
+            qodana-
+
+      - name: 'Qodana Scan'
+        uses: JetBrains/qodana-action@v2023.2
+        env:
+          QODANA_TOKEN: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvcmdhbml6YXRpb24iOiIzN0w0biIsInByb2plY3QiOiJBZ3dQNCIsInRva2VuIjoiM2o2NGsifQ.OG3qJHi61hRr0IlhYb5P3KsEaUxCxAKTBtPHqVDkXUs"
