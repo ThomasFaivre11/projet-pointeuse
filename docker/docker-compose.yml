@@ -26,6 +26,7 @@ services:
     #volumes:
     #  - /Users/thomas/Desktop/REPO EPITECH/T-POO-700-NCY_4/norman:/webapp
     #  - /webapp/node_modules
+    command: ["npm", "run", "dev"]
     depends_on:
       - postgres
 
@@ -37,6 +38,7 @@ services:
       MIX_ENV: dev
     #volumes:
     #  - /Users/thomas/Desktop/REPO EPITECH/T-POO-700-NCY_4/users_api:/app
+    command: ["mix", "phx.server"]
     depends_on:
       - postgres
 
