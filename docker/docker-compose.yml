@@ -20,13 +20,12 @@ services:
       - "3001:3001"
       - "3000:3000"
       - "24678:24678"
-      - "2222:22"
     environment:
       NODE_ENV: development
     #volumes:
     #  - /Users/thomas/Desktop/REPO EPITECH/T-POO-700-NCY_4/norman:/webapp
     #  - /webapp/node_modules
-    command: npm run dev
+    command: sh -c "npm install && npm run build && npm run dev"
     depends_on:
       - postgres
 
@@ -42,12 +41,12 @@ services:
     depends_on:
       - postgres
 
-  watchtower:
-    image: containrrr/watchtower
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - WATCHTOWER_SCHEDULE=*/5 * * * *
+  #watchtower:
+  #  image: containrrr/watchtower
+  #  volumes:
+  #    - /var/run/docker.sock:/var/run/docker.sock
+  #  environment:
+  #    - WATCHTOWER_SCHEDULE=*/5 * * * *
 
 volumes:
   pgdata:
