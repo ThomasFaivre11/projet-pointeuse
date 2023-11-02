@@ -19,6 +19,13 @@ defmodule UsersApi.Admin.User do
     |> cast(attrs, [:username, :email, :type, :password])
     |> validate_required([:username, :email, :type, :password])
     |> unique_constraint(:email)
+    |> put_password_hash();
   end
+
+  defp put_password_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+    change(changeset, password: Bcrypt.hash_pwd_salt(password))
+  end
+
+  defp put_password_hash(changeset), do: changeset
 
 end

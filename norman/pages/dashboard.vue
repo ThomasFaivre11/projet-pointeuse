@@ -1,7 +1,7 @@
 <script>
 import gsap from 'gsap';
 import Profil from '@/components/Profil.vue';
-import Dashboard from '@/components/dashboard.vue';
+import Dashboard from '@/components/Dashboard.vue';
 import Team from '@/components/Team.vue';
 
 export default {

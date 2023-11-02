@@ -2,6 +2,7 @@
 <script>
 import gsap from 'gsap';
 import Loader from '@/components/Loader.vue';
+import Auth from '@/components/Auth.vue';
 
 export default {
 	mounted() {
@@ -47,6 +48,7 @@ export default {
 			</div>
 		</div>
 		<Textimage />
+		<Auth />
 	</section>
 </template>
 

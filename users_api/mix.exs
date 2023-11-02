@@ -44,7 +44,9 @@ defmodule UsersApi.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:cors_plug, "~> 3.0.3"}
+      {:cors_plug, "~> 3.0.3"},
+      {:guardian, "~> 2.3"},
+      {:bcrypt_elixir, "~> 3.0"}
     ]
   end
 

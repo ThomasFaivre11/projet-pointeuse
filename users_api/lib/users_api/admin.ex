@@ -38,6 +38,26 @@ defmodule UsersApi.Admin do
   def get_user!(id), do: Repo.get!(User, id)
 
   @doc """
+  Get a single Account
+
+  Return nil if the account does not exist.
+
+  ## Examples
+
+      iex> get_account_by_email(test@gmail.com)
+      %User{}
+
+      iex> get_account_by_email(no_account@gmail.com)
+      nil
+  """
+
+  def get_account_by_username(username) do
+    User
+    |> where(username: ^username)
+    |> Repo.one()
+  end
+
+  @doc """
   Creates a user.
 
   ## Examples
