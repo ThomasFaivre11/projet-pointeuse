@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64/v8 elixir:latest
+FROM elixir:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /app
