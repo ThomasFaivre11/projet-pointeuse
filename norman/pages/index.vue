@@ -47,9 +47,8 @@ export default {
 				</svg>
 			</div>
 		</div>
-    <TeamUserCard name_user="Broly" :status_user="true"/>
-		<Textimage />
 		<Auth />
+		<Textimage />
 	</section>
 </template>
 
