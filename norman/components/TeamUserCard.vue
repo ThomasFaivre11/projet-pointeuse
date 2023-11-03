@@ -10,19 +10,32 @@ export default {
 <template>
 
   <div class="card">
-    <img src="../assets/images/user_profil.png" alt="image profil"/>
+    <img src="../assets/images/user_profil.png" alt="image profil" class="profil_img"/>
     <div class="name_presence">
       <h1>{{ name_user }}</h1>
       <p v-if="status_user">Présent</p>
       <p v-else class="abs">Absent</p>
+    </div>
+    <div class="management">
+      <button><img src="assets/images/raise_user.png" alt="raise user"  class="button_manage"></button>
+      <button><img src="assets/images/remove_user.png" alt="remove user"  class="button_manage"></button>
     </div>
   </div>
 
 </template>
 
 <style scoped lang="scss">
-
-img{
+.management{
+  display: flex;
+  margin-left: 10px;
+  align-items: center;
+  justify-content: center;
+}
+.button_manage{
+  width: 30px;
+  margin-left: 10px;
+}
+.profil_img{
   width: 50px;
   height: 100%;
 }
