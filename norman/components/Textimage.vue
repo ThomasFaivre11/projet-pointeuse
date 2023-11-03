@@ -61,6 +61,7 @@ img {
 }
 .container-image {
 	min-width: 45vh;
+	height: 100%;
 
 	@include desktop {
 		max-width: 60vh;
