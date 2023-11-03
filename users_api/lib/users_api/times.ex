@@ -77,6 +77,24 @@ defmodule UsersApi.Times do
     |> Workingtime.changeset(attrs)
     |> Repo.update()
   end
+  @doc """
+  Méthode ayant pour but de modifier la date de fin d'un workingtime en cours en fonction d'un user_id
+    L'user_id doit figurer dans le body de la requête
+  """
+  def update_end(user_id, attrs) do
+    workingtime = from(w in Workingtime, where: is_nil(w.end) and w.user_id == ^user_id, select: w)
+    |> Repo.one()
+
+    case workingtime do
+      %Workingtime{} = workingtime ->
+        workingtime
+        |> Workingtime.changeset(attrs)
+        |> Repo.update()
+
+      nil ->
+        {:error, "Aucun workingtime en cours trouvé avec ce user_id "}
+    end
+  end
 
 
   @doc """

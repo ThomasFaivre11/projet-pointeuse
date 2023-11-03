@@ -24,8 +24,8 @@ defmodule UsersApiWeb.Router do
     delete "/workingtimes/:id", WorkingtimeController, :delete
     get "/workingtimes/:user_id/:id", WorkingtimeController, :show # by worktimes_id
     get "/workingtimes/:user_id", WorkingtimeController, :filter_between # all between start and end
-    # Not working
     put "/workingtimes/:id", WorkingtimeController, :update
+    put "/workingtimes/", WorkingtimeController, :update_end
 
   end
 

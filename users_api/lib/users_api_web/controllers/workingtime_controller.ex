@@ -36,6 +36,17 @@ defmodule UsersApiWeb.WorkingtimeController do
     end
   end
 
+  def update_end(conn, %{"workingtime" => workingtime_params}) do
+    case UsersApi.Times.update_end(workingtime_params["user_id"], workingtime_params) do
+      {:ok, workingtime} ->
+        json(conn, %{"message" => "Updated successfully", "workingtime" => workingtime})
+      {:error, error_message} ->
+        conn
+        |> put_status(:bad_request)
+        |> json(%{"error" => error_message})
+    end
+  end
+
   def delete(conn, %{"id" => id}) do
       workingtime = Times.get_workingtime!(id)
       with {:ok, %Workingtime{}} <- Times.delete_workingtime(workingtime) do
