@@ -6,8 +6,4 @@ export default defineNuxtRouteMiddleware((to, from) => {
 	if (!token) {
 		return navigateTo('/');
 	}
-
-	if (to.path !== '/') {
-		return navigateTo('/');
-	}
 });
