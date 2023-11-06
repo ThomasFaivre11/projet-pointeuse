@@ -1,10 +1,13 @@
+import check_token from '../composables/useAuth'
+
 export default defineNuxtRouteMiddleware(() => {
 	setTimeout(() => {
 		console.log('middleware');
-		const token = localStorage.getItem("user_token");
-		if (!token){
-			console.log(token)
-			window.location.href = "http://localhost:3000/"
+		const token = check_token()
+		if (token){
+			window.location.href = `http://localhost:3000/dashboard`
+		}else {
+			window.location.href = `http://localhost:3000/`
 		}
 	}, 0.00001);
 });

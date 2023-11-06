@@ -8,8 +8,16 @@ const useAuth = () => {
 			console.log(e)
 		}
 	}
+
+	async function check_token(){
+		const token = localStorage.getItem("user_token")
+		return !!token;
+	}
 	
-	return {};
+	return {
+		login,
+		check_token,
+	};
 };
 
 export default useAuth;

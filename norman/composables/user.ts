@@ -26,12 +26,11 @@ const user = () => {
 				console.log('User créé avec succès');
 				if (creationResponse["token"]){
 					token = creationResponse["token"]
+					localStorage.setItem("user_token", token)
 				}else {
 					console.log("pas de token")
 				}
 				creation = true;
-			} else {
-				throw new Error(`Erreur HTTP! Statut: ${resp.status} \n\n`);
 			}
 		} catch (e) {
 			creation = false
@@ -39,8 +38,7 @@ const user = () => {
 			console.log(' Erreur lors de la création d\'un user');
 		}
 
-		// @ts-ignore
-		return {creation, token};
+		return creation;
 	}
 
 	async function getUser(id: string, email: string, username: string) {
