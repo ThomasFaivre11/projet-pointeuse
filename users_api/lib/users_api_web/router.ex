@@ -12,6 +12,7 @@ defmodule UsersApiWeb.Router do
     post "/users", UserController, :create
     # get "/users/", UserController, :index
     get "/users/", UserController, :filter
+    post "/login", UserController, :login
     get "/users/:id", UserController, :show
     put "/users/:id", UserController, :update
     delete "/users/:id", UserController, :delete

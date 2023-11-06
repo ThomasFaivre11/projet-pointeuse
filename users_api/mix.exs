@@ -46,7 +46,7 @@ defmodule UsersApi.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:cors_plug, "~> 3.0.3"},
       {:guardian, "~> 2.3"},
-      {:bcrypt_elixir, "~> 3.0"}
+      {:bcrypt_elixir, "~> 3.1.0"}
     ]
   end
 

@@ -1,11 +1,28 @@
 const useAuth = () => {
-	// modele url http://localhost:4000/api/users?email=thomas@thomas&username=thomas
-	async function login(username: string, email: string, password: string) {
+	const myHeaders = new Headers();
+	myHeaders.append('Content-Type', 'application/json');
+	async function login(email: string, password: string){
+		const data_type = {
+			email: `${email}`,
+			password: `${password}`
+		}
 		try {
-			const url = `http://localhost/api/login`;
-			const response = await fetch(url);
-		} catch (e) {
-			console.log(e);
+			const url = `http://localhost:4000/api/login`;
+			const response = await fetch(url, {
+				method: "POST",
+				headers: myHeaders,
+				body: JSON.stringify({user: data_type}),
+			});
+			if (response.ok){
+				const login_response = await response.json()
+				const token = login_response["user_token"]
+				localStorage.setItem("user_token", token)
+				window.location.href = "http://localhost:3000/dashboard"
+			}else {
+				console.log("problème de requete login")
+			}
+		}catch (e){
+			console.log(e)
 		}
 	}
 
@@ -15,8 +32,9 @@ const useAuth = () => {
 	}
 
 	return {
+
 		login,
-		check_token,
+		check_token
 	};
 };
 

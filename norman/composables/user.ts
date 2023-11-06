@@ -15,7 +15,6 @@ const user = () => {
 				password: `${password}`,
 				email: `${email}`,
 			};
-			// console.log(JSON.stringify({ user: userData }));
 			const resp = await fetch(base_url, {
 				method: 'POST',
 				headers: myHeaders,
