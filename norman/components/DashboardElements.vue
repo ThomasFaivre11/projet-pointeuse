@@ -236,10 +236,6 @@ export default {
 	position: relative;
 
 	@include tablet {
-		margin-left: 150rem;
-		width: calc(100% - 150rem);
-	}
-	@include desktop {
 		margin-left: 300rem;
 		width: calc(100% - 300rem);
 	}
@@ -254,11 +250,6 @@ export default {
 		display: none;
 
 		@include tablet {
-			margin-left: 150rem;
-			width: calc(100% - 150rem);
-		}
-
-		@include desktop {
 			width: calc(100% - 300rem);
 		}
 
