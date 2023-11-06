@@ -11,7 +11,7 @@ const useAuth = () => {
 			const response = await fetch(url, {
 				method: "POST",
 				headers: myHeaders,
-				body: JSON.stringify({user: data_type}),
+				body: JSON.stringify(data_type),
 			});
 			if (response.ok){
 				const login_response = await response.json()
@@ -32,7 +32,6 @@ const useAuth = () => {
 	}
 
 	return {
-
 		login,
 		check_token
 	};

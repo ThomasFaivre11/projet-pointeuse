@@ -2,18 +2,29 @@
 import classique_button from './classique_button.vue';
 import gsap from 'gsap';
 import userModule from '/composables/user';
+import useAuth from "~/composables/useAuth";
 
 const host = 'localhost'
 const url_base = `http://${host}:3000/`
 const user = userModule();
+const auth = useAuth();
 const creation_utilisateur = async () => {
 	try {
-    const {creation, token} = await user.createUser('employee', signInData.username, signInData.email, signInData.password);
-    window.location.href = `${url_base}dashboard`
+    await user.createUser('employee', signInData.username, signInData.email, signInData.password);
   }catch (e) {
     console.log(e)
   }
 };
+
+const log = async () => {
+  try {
+    console.log(loginData)
+    await auth.login(loginData.email, loginData.password);
+  }catch (e) {
+    console.log(e);
+    console.log("problème sur la connexion")
+  }
+}
 
 const choiceContainerOne = ref(null);
 const choiceContainerTwo = ref(null);
@@ -26,7 +37,7 @@ const circleTwo = ref(null);
 const circleThree = ref(null);
 
 const loginData = reactive({
-	username: '',
+	email: '',
 	password: '',
 });
 
@@ -101,18 +112,18 @@ const backIndex = () => {
 			<form>
 				<div class='form-data'>
 					<div class='input-data'>
-						<input class='text' type='text' required v-model='loginData.username' />
+						<input class='text' type='text' required v-model='loginData.email' />
 						<div class='underline'></div>
-						<label class='text'>Identifiant</label>
+						<label class='text'>Email</label>
 					</div>
 					<div class='input-data'>
-						<input class='text' type='text' required v-model='loginData.password' />
+						<input class='text' type='password' required v-model='loginData.password' />
 						<div class='underline'></div>
 						<label class='text'>Mot de passe</label>
 					</div>
 				</div>
 			</form>
-			<classique_button text='Se Connecter' />
+			<classique_button text='Se Connecter' @click='log' />
 		</div>
 		<div class='container-login create' ref='choiceCreateSection'>
 			<h1>Création de compte</h1>

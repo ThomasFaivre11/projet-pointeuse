@@ -1,13 +1,13 @@
 import { log } from 'unenv/runtime/node/util';
+import useAuth from './useAuth'
 
 const user = () => {
+	const useAuthModule = useAuth();
 	const myHeaders = new Headers();
 	myHeaders.append('Content-Type', 'application/json');
 	let base_url = 'http://localhost:4000/api/users';
 
 	async function createUser(type: string, username: string, password: string, email: string) {
-		let creation = false;
-		let token = null;
 		try {
 			const userData = {
 				type: `${type}`,
@@ -23,21 +23,24 @@ const user = () => {
 			if (resp.ok) {
 				const creationResponse = await resp.json();
 				console.log('User créé avec succès');
-				if (creationResponse["token"]){
-					token = creationResponse["token"]
-					localStorage.setItem("user_token", token)
-				}else {
-					console.log("pas de token")
+				let log = false
+				try {
+					await useAuthModule.login(email, password)
+					log = true;
+				}catch (err){
+					console.log(err)
+					console.log("problème de loggin")
 				}
-				creation = true;
+				if (log){
+					console.log(`l'utilisateur ${username} est connecté`)
+				}else {
+					console.log("problème de connexion")
+				}
 			}
 		} catch (e) {
-			creation = false
 			console.log(e);
 			console.log(' Erreur lors de la création d\'un user');
 		}
-
-		return creation;
 	}
 
 	async function getUser(id: string, email: string, username: string) {

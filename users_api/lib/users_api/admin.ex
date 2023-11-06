@@ -127,4 +127,10 @@ alias UsersApi.Auth.Guardian
     |> Repo.all()
   end
 
+  def get_account_by_email(email) do
+    User
+    |> where(email: ^email)
+    |> Repo.one()
+  end
+
 end

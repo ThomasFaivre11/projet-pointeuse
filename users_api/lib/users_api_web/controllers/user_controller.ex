@@ -15,11 +15,10 @@ defmodule UsersApiWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     case Admin.create_user(user_params) do
       {:ok, %User{} = user} ->
-        {:ok, _user, token} = Guardian.create_token(user)
         conn
         |> put_status(:created)
         |> put_resp_header("location", Routes.user_path(conn, :show, user))
-        |> json(%{user: %{id: user.id, username: user.username, email: user.email}, token: token})
+        |> json(%{user: %{id: user.id, username: user.username, email: user.email}})
       {:error, reason} ->
         conn
         |> put_status(:bad_request)
@@ -44,6 +43,7 @@ defmodule UsersApiWeb.UserController do
     users = Admin.get_users_by_email_and_username(email, username)
     render(conn, "index.json", users: users)
   end
+
 
   def login(conn, %{"email" => email, "password" => password}) do
     case Guardian.authenticate(email, password) do
