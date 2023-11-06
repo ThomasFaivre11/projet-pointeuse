@@ -21,6 +21,11 @@ export default {
 			},
 		};
 	},
+	mounted: function () {
+		if (document.documentElement.clientWidth < 768) {
+			gsap.set(this.$refs.sideBar, { xPercent: -110 });
+		}
+	},
 	components: {
 		Profil,
 		Dashboard,
@@ -50,30 +55,54 @@ export default {
 			tl.set(this.$refs.interloader, { display: 'none' });
 			tl.set(this.$refs.sideBar, { pointerEvents: 'all' });
 		},
+		openSideBar() {
+			const tl = gsap.timeline();
+
+			tl.to(this.$refs.sideBar, { xPercent: 0, duration: 1, ease: 'power3.inOut' });
+		},
+		closeSideBar() {
+			const tl = gsap.timeline();
+
+			tl.to(this.$refs.sideBar, { xPercent: -110, duration: 1, ease: 'power3.inOut' });
+		},
 	},
 };
 </script>
 
 <template>
+	<div class="icon-menu" @click="openSideBar">
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home">
+			<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+			<polyline points="9 22 9 12 15 12 15 22" />
+		</svg>
+	</div>
 	<div class="side-bar" ref="sideBar">
-		<div class="title">Sophie</div>
-		<ul>
-			<li :class="{ active: this.Dashboard.nav }" @click="interloader(false, true, false)">
-				<span class="line"></span>
-				<div class="overflow"></div>
-				<span>Dashboard</span>
-			</li>
-			<li :class="{ active: this.Team.nav }" @click="interloader(false, false, true)">
-				<span class="line"></span>
-				<div class="overflow"></div>
-				<span>Mon Equipe</span>
-			</li>
-			<li :class="{ active: this.Profil.nav }" @click="interloader(true, false, false)">
-				<span class="line"></span>
-				<div class="overflow"></div>
-				<span>Mon Profil</span>
-			</li>
-		</ul>
+		<div class="relative-container">
+			<div class="close-container" @click="closeSideBar">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+					<path d="M18 6 6 18" />
+					<path d="m6 6 12 12" />
+				</svg>
+			</div>
+			<div class="title">Sophie</div>
+			<ul>
+				<li :class="{ active: this.Dashboard.nav }" @click="interloader(false, true, false)">
+					<span class="line"></span>
+					<div class="overflow"></div>
+					<span>Dashboard</span>
+				</li>
+				<li :class="{ active: this.Team.nav }" @click="interloader(false, false, true)">
+					<span class="line"></span>
+					<div class="overflow"></div>
+					<span>Mon Equipe</span>
+				</li>
+				<li :class="{ active: this.Profil.nav }" @click="interloader(true, false, false)">
+					<span class="line"></span>
+					<div class="overflow"></div>
+					<span>Mon Profil</span>
+				</li>
+			</ul>
+		</div>
 	</div>
 	<div class="dashboard-container">
 		<Dashboard v-if="this.Dashboard.page" />
@@ -92,6 +121,22 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.icon-menu {
+	position: fixed;
+	bottom: 30px;
+	left: 30px;
+	width: 24px;
+	z-index: 1;
+
+	svg {
+		stroke: $darkblue;
+	}
+
+	@include tablet {
+		display: none;
+	}
+}
+
 .side-bar {
 	position: fixed;
 	top: 0;
@@ -101,84 +146,121 @@ export default {
 	height: 100vh;
 	background: $white;
 	box-shadow: 0 0 10rem rgba(0, 0, 0, 0.1);
-	.title {
-		@include SuisseIntl;
-		text-transform: uppercase;
-		font-size: 30rem;
-		font-weight: 500;
-		color: $darkblue;
-		margin-top: 50px;
-		margin-left: 100rem;
-	}
+	z-index: 2;
 
-	ul {
-		display: flex;
-		flex-direction: column;
-		gap: 15px;
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
-		margin-left: 100rem;
-		margin-top: 100px;
+	.relative-container {
+		position: relative;
 
-		li {
+		.close-container {
+			position: absolute;
+			top: -30px;
+			right: 30px;
+			width: 24px;
+
+			svg {
+				stroke: $darkblue;
+			}
+
+			@include tablet {
+				display: none;
+			}
+		}
+		.title {
+			@include SuisseIntl;
+			text-transform: uppercase;
+			font-size: 30rem;
+			font-weight: 500;
+			color: $darkblue;
+			margin-top: 50px;
+			margin-left: 100rem;
+		}
+
+		ul {
 			display: flex;
-			align-items: center;
-			position: relative;
-			gap: 10px;
-			margin-right: 10px;
-			cursor: pointer;
+			flex-direction: column;
+			gap: 15px;
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			margin-left: 100rem;
+			margin-top: 100px;
 
-			&:hover,
-			&.active {
+			li {
+				display: flex;
+				align-items: center;
+				position: relative;
+				gap: 10px;
+				margin-right: 10px;
+				cursor: pointer;
+
+				&:hover,
+				&.active {
+					span {
+						&.line {
+							transform: scaleX(1);
+						}
+					}
+					.overflow {
+						width: 30px;
+					}
+				}
 				span {
+					@include GT-America;
+					display: inline-block;
+					font-size: 20px;
+					color: $darkblue;
+
 					&.line {
-						transform: scaleX(1);
+						position: absolute;
+						left: 0;
+						width: 25px;
+						height: 1px;
+						background: $darkblue;
+						transform: scaleX(0);
+						transition: transform 0.4s $in-out-cubic;
+						transform-origin: left;
 					}
 				}
 				.overflow {
-					width: 30px;
+					width: 0;
+					transition: width 0.4s $in-out-cubic;
 				}
-			}
-			span {
-				@include GT-America;
-				display: inline-block;
-				font-size: 20px;
-				color: $darkblue;
-
-				&.line {
-					position: absolute;
-					left: 0;
-					width: 25px;
-					height: 1px;
-					background: $darkblue;
-					transform: scaleX(0);
-					transition: transform 0.4s $in-out-cubic;
-					transform-origin: left;
-				}
-			}
-			.overflow {
-				width: 0;
-				transition: width 0.4s $in-out-cubic;
 			}
 		}
 	}
 }
 .dashboard-container {
-	margin-left: 300rem;
-	width: calc(100% - 300rem);
+	background: $white;
+	width: 100%;
 	min-height: 100vh;
 	position: relative;
+
+	@include tablet {
+		margin-left: 150rem;
+		width: calc(100% - 150rem);
+	}
+	@include desktop {
+		margin-left: 300rem;
+		width: calc(100% - 300rem);
+	}
 	.partial.interloader {
 		z-index: 999;
-		width: calc(100% - 300rem);
-		// height: calc(100 * var(--vh));
+		width: 100%;
 		height: 100vh;
 		position: fixed;
 		top: 0;
 		right: 0;
 		overflow: hidden;
 		display: none;
+
+		@include tablet {
+			margin-left: 150rem;
+			width: calc(100% - 150rem);
+		}
+
+		@include desktop {
+			width: calc(100% - 300rem);
+		}
 
 		.logo-container {
 			position: absolute;

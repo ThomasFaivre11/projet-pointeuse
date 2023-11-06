@@ -212,11 +212,19 @@ const backIndex = () => {
 
 			.choice-text {
 				@include SuisseIntl;
-				font-size: 8vh;
 				color: $white;
 				font-weight: 500;
 				z-index: 1;
 				text-align: center;
+				font-size: 30rem;
+
+				@include tablet {
+					font-size: 5vh;
+				}
+
+				@include desktop {
+					font-size: 8vh;
+				}
 			}
 
 			img {

@@ -95,11 +95,12 @@ img {
 		height: auto;
 	}
 	.container-image {
-		max-width: 60%;
+		width: 100%;
 	}
 	.container-text {
 		margin-left: 0;
 		margin-top: 0;
+		max-width: 80%;
 	}
 }
 </style>
