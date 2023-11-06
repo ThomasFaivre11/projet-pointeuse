@@ -61,4 +61,63 @@ defmodule UsersApi.TeamManagementTest do
       assert %Ecto.Changeset{} = TeamManagement.change_work_teams(work_teams)
     end
   end
+
+  describe "workteams" do
+    alias UsersApi.TeamManagement.Workteams
+
+    @valid_attrs %{team_name: "some team_name"}
+    @update_attrs %{team_name: "some updated team_name"}
+    @invalid_attrs %{team_name: nil}
+
+    def workteams_fixture(attrs \\ %{}) do
+      {:ok, workteams} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> TeamManagement.create_workteams()
+
+      workteams
+    end
+
+    test "list_workteams/0 returns all workteams" do
+      workteams = workteams_fixture()
+      assert TeamManagement.list_workteams() == [workteams]
+    end
+
+    test "get_workteams!/1 returns the workteams with given id" do
+      workteams = workteams_fixture()
+      assert TeamManagement.get_workteams!(workteams.id) == workteams
+    end
+
+    test "create_workteams/1 with valid data creates a workteams" do
+      assert {:ok, %Workteams{} = workteams} = TeamManagement.create_workteams(@valid_attrs)
+      assert workteams.team_name == "some team_name"
+    end
+
+    test "create_workteams/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = TeamManagement.create_workteams(@invalid_attrs)
+    end
+
+    test "update_workteams/2 with valid data updates the workteams" do
+      workteams = workteams_fixture()
+      assert {:ok, %Workteams{} = workteams} = TeamManagement.update_workteams(workteams, @update_attrs)
+      assert workteams.team_name == "some updated team_name"
+    end
+
+    test "update_workteams/2 with invalid data returns error changeset" do
+      workteams = workteams_fixture()
+      assert {:error, %Ecto.Changeset{}} = TeamManagement.update_workteams(workteams, @invalid_attrs)
+      assert workteams == TeamManagement.get_workteams!(workteams.id)
+    end
+
+    test "delete_workteams/1 deletes the workteams" do
+      workteams = workteams_fixture()
+      assert {:ok, %Workteams{}} = TeamManagement.delete_workteams(workteams)
+      assert_raise Ecto.NoResultsError, fn -> TeamManagement.get_workteams!(workteams.id) end
+    end
+
+    test "change_workteams/1 returns a workteams changeset" do
+      workteams = workteams_fixture()
+      assert %Ecto.Changeset{} = TeamManagement.change_workteams(workteams)
+    end
+  end
 end

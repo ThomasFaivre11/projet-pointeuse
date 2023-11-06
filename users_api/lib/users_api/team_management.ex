@@ -101,4 +101,13 @@ defmodule UsersApi.TeamManagement do
   def change_work_teams(%WorkTeams{} = work_teams, attrs \\ %{}) do
     WorkTeams.changeset(work_teams, attrs)
   end
+
+  @doc """
+  Returns all members of a team
+  """
+  def get_by_manager_id(manager_id) do
+    from(t in WorkTeams, where: t.manager_id == ^manager_id)
+    |> Repo.all()
+  end
+
 end
