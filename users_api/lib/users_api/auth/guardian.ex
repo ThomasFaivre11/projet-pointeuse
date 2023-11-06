@@ -37,7 +37,7 @@ defmodule UsersApi.Auth.Guardian do
     Bcrypt.verify_pass(password, hash_password)
   end
 
-  defp create_token(user) do
+  def create_token(user) do
     {:ok , token, _claims} = encode_and_sign(user)
     {:ok, user, token}
   end

@@ -7,6 +7,7 @@ const user = () => {
 
 	async function createUser(type: string, username: string, password: string, email: string) {
 		let creation = false;
+		let token = null;
 		try {
 			const userData = {
 				type: `${type}`,
@@ -14,25 +15,32 @@ const user = () => {
 				password: `${password}`,
 				email: `${email}`,
 			};
-			console.log(JSON.stringify({ user: userData }));
+			// console.log(JSON.stringify({ user: userData }));
 			const resp = await fetch(base_url, {
 				method: 'POST',
 				headers: myHeaders,
-				body: JSON.stringify({ user: userData }), // Enveloppez les données sous la clé "user"
+				body: JSON.stringify({ user: userData }),
 			});
 			if (resp.ok) {
-				const creationResponse = await resp.json(); // Attendez la résolution de la promesse .json()
-				console.log('User créé avec succès', creationResponse);
+				const creationResponse = await resp.json();
+				console.log('User créé avec succès');
+				if (creationResponse["token"]){
+					token = creationResponse["token"]
+				}else {
+					console.log("pas de token")
+				}
 				creation = true;
 			} else {
 				throw new Error(`Erreur HTTP! Statut: ${resp.status} \n\n`);
 			}
 		} catch (e) {
+			creation = false
 			console.log(e);
 			console.log(' Erreur lors de la création d\'un user');
 		}
 
-		return creation;
+		// @ts-ignore
+		return {creation, token};
 	}
 
 	async function getUser(id: string, email: string, username: string) {

@@ -1,6 +1,7 @@
 defmodule UsersApiWeb.UserController do
   use UsersApiWeb, :controller
-
+  alias UsersApi.Auth
+  alias UsersApi.Auth.Guardian
   alias UsersApi.Admin
   alias UsersApi.Admin.User
 
@@ -14,11 +15,11 @@ defmodule UsersApiWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     case Admin.create_user(user_params) do
       {:ok, %User{} = user} ->
+        {:ok, _user, token} = Guardian.create_token(user)
         conn
         |> put_status(:created)
         |> put_resp_header("location", Routes.user_path(conn, :show, user))
-        |> render("show.json", user: user)
-
+        |> json(%{user: %{id: user.id, username: user.username, email: user.email}, token: token})
       {:error, reason} ->
         conn
         |> put_status(:bad_request)

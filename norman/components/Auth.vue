@@ -4,15 +4,17 @@ import gsap from 'gsap';
 import userModule from '/composables/user';
 import * as http from 'http';
 
+const host = 'localhost'
+const url_base = `http://${host}:3000/`
 const user = userModule();
-const url = 'http://localhost:3000';
 const creation_utilisateur = async () => {
-	const creation = await user.createUser('employee', signInData.username, signInData.email, signInData.password);
-	if (creation) {
-		window.location.href = `${url}/dashboard`;
-	} else {
-		alert('vérifier les informations saisie !');
-	}
+	try {
+    const {creation, token} = await user.createUser('employee', signInData.username, signInData.email, signInData.password);
+    localStorage.setItem("user_token", token)
+    window.location.href = `${url_base}dashboard`
+  }catch (e) {
+    console.log(e)
+  }
 };
 
 const choiceContainerOne = ref(null);
