@@ -5,7 +5,7 @@ defmodule UsersApi.Admin do
 
   import Ecto.Query, warn: false
   alias UsersApi.Repo
-
+alias UsersApi.Auth.Guardian
   alias UsersApi.Admin.User
 
   @doc """
@@ -126,4 +126,5 @@ defmodule UsersApi.Admin do
     from(u in User, where: u.email == ^email and u.username == ^username)
     |> Repo.all()
   end
+
 end

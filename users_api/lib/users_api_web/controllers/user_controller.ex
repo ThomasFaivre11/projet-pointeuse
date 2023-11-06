@@ -45,6 +45,26 @@ defmodule UsersApiWeb.UserController do
     render(conn, "index.json", users: users)
   end
 
+  def login(conn, %{"email" => email, "password" => password}) do
+    case Guardian.authenticate(email, password) do
+      {:ok, user, token} ->
+        conn
+        |> put_status(:ok)
+        |> json(%{user: user, token: token})
+      {:error, :no_user} ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "User not found"})
+      {:error, :unauthorized} ->
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{error: "Invalid credentials"})
+      {:error, _reason} ->
+        conn
+        |> put_status(:internal_server_error)
+        |> json(%{error: "Internal server error"})
+    end
+  end
 
   def delete(conn, %{"id" => id}) do
     user = Admin.get_user!(id)
@@ -53,4 +73,6 @@ defmodule UsersApiWeb.UserController do
       send_resp(conn, :no_content, "")
     end
   end
+
+
 end
