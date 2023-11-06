@@ -28,6 +28,9 @@ defmodule UsersApiWeb.Router do
     get "/workingtimes/:user_id", WorkingtimeController, :filter_between # all between start and end
     put "/workingtimes/:id", WorkingtimeController, :update
     put "/workingtimes/", WorkingtimeController, :update_end
+    # WorkTeams
+    post "/workteams", WorkteamsController, :create
+    get "/workteams/:manager_id", WorkteamsController, :get_by_manager_id
 
   end
 
