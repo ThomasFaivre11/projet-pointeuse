@@ -1,6 +1,19 @@
 <script setup>
 import classique_button from './classique_button.vue';
 import gsap from 'gsap';
+import userModule from '/composables/user';
+import * as http from 'http';
+
+const user = userModule();
+const url = 'http://localhost:3000';
+const creation_utilisateur = async () => {
+	const creation = await user.createUser('employee', signInData.username, signInData.email, signInData.password);
+	if (creation) {
+		window.location.href = `${url}/dashboard`;
+	} else {
+		alert('vérifier les informations saisie !');
+	}
+};
 
 const choiceContainerOne = ref(null);
 const choiceContainerTwo = ref(null);
@@ -28,7 +41,12 @@ const choiceConnexion = () => {
 	tl.to(choiceContainerOne.value, { duration: 1, xPercent: -100, pointerEvents: 'none', ease: 'power3.out' });
 	tl.to(choiceContainerTwo.value, { duration: 1, xPercent: 100, pointerEvents: 'none', ease: 'power3.out' }, '<');
 	tl.to([choiceConnexionSection.value, closeButton.value], { duration: 0.5, opacity: 1, pointerEvents: 'all' });
-	tl.to([circleOne.value, circleTwo.value, circleThree.value], { duration: 1, scale: 1, ease: 'power3.out', stagger: 0.1 }, '<');
+	tl.to([circleOne.value, circleTwo.value, circleThree.value], {
+		duration: 1,
+		scale: 1,
+		ease: 'power3.out',
+		stagger: 0.1,
+	}, '<');
 };
 
 const choiceCreate = () => {
@@ -36,81 +54,96 @@ const choiceCreate = () => {
 	tl.to(choiceContainerOne.value, { duration: 1, xPercent: -100, pointerEvents: 'none', ease: 'power3.out' });
 	tl.to(choiceContainerTwo.value, { duration: 1, xPercent: 100, pointerEvents: 'none', ease: 'power3.out' }, '<');
 	tl.to([choiceCreateSection.value, closeButton.value], { duration: 0.5, opacity: 1, pointerEvents: 'all' });
-	tl.to([circleOne.value, circleTwo.value, circleThree.value], { duration: 1, scale: 1, ease: 'power3.out', stagger: 0.1 }, '<');
+	tl.to([circleOne.value, circleTwo.value, circleThree.value], {
+		duration: 1,
+		scale: 1,
+		ease: 'power3.out',
+		stagger: 0.1,
+	}, '<');
 };
 
 const backIndex = () => {
 	const tl = gsap.timeline();
-	tl.to([choiceConnexionSection.value, choiceCreateSection.value, closeButton.value], { duration: 0.5, opacity: 0, pointerEvents: 'none' });
-	tl.to([circleOne.value, circleTwo.value, circleThree.value], { duration: 1, scale: 0, ease: 'power3.out', stagger: 0.1 }, '<');
+	tl.to([choiceConnexionSection.value, choiceCreateSection.value, closeButton.value], {
+		duration: 0.5,
+		opacity: 0,
+		pointerEvents: 'none',
+	});
+	tl.to([circleOne.value, circleTwo.value, circleThree.value], {
+		duration: 1,
+		scale: 0,
+		ease: 'power3.out',
+		stagger: 0.1,
+	}, '<');
 	tl.to(choiceContainerOne.value, { duration: 1, xPercent: 0, pointerEvents: 'all', ease: 'power3.out' });
 	tl.to(choiceContainerTwo.value, { duration: 1, xPercent: 0, pointerEvents: 'all', ease: 'power3.out' }, '<');
 };
+
 </script>
 
 <template>
-	<section class="module login">
-		<div class="circle one" ref="circleOne"></div>
-		<div class="circle two" ref="circleTwo"></div>
-		<div class="circle three" ref="circleThree"></div>
-		<div class="choice-container" ref="choiceContainer">
-			<div class="connexion-choice choice-part" ref="choiceContainerOne" @click="choiceConnexion">
-				<h2 class="choice-text">Connexion</h2>
-				<img src="assets/images/connexion.png" alt="connexion" />
+	<section class='module login'>
+		<div class='circle one' ref='circleOne'></div>
+		<div class='circle two' ref='circleTwo'></div>
+		<div class='circle three' ref='circleThree'></div>
+		<div class='choice-container' ref='choiceContainer'>
+			<div class='connexion-choice choice-part' ref='choiceContainerOne' @click='choiceConnexion'>
+				<h2 class='choice-text'>Connexion</h2>
+				<img src='assets/images/connexion.png' alt='connexion' />
 			</div>
-			<div class="create-choice choice-part" ref="choiceContainerTwo" @click="choiceCreate">
-				<h2 class="choice-text">Création de compte</h2>
-				<img src="assets/images/create.png" alt="create" />
+			<div class='create-choice choice-part' ref='choiceContainerTwo' @click='choiceCreate'>
+				<h2 class='choice-text'>Création de compte</h2>
+				<img src='assets/images/create.png' alt='create' />
 			</div>
 		</div>
-		<div class="container-login connexion" ref="choiceConnexionSection">
+		<div class='container-login connexion' ref='choiceConnexionSection'>
 			<h1>Connexion</h1>
 			<form>
-				<div class="form-data">
-					<div class="input-data">
-						<input class="text" type="text" required v-model="loginData.username" />
-						<div class="underline"></div>
-						<label class="text">Identifiant</label>
+				<div class='form-data'>
+					<div class='input-data'>
+						<input class='text' type='text' required v-model='loginData.username' />
+						<div class='underline'></div>
+						<label class='text'>Identifiant</label>
 					</div>
-					<div class="input-data">
-						<input class="text" type="text" required v-model="loginData.password" />
-						<div class="underline"></div>
-						<label class="text">Mot de passe</label>
+					<div class='input-data'>
+						<input class='text' type='text' required v-model='loginData.password' />
+						<div class='underline'></div>
+						<label class='text'>Mot de passe</label>
 					</div>
 				</div>
 			</form>
-			<classique_button text="Se Connecter" />
+			<classique_button text='Se Connecter' />
 		</div>
-		<div class="container-login create" ref="choiceCreateSection">
+		<div class='container-login create' ref='choiceCreateSection'>
 			<h1>Création de compte</h1>
 			<form>
-				<div class="form-data">
-					<div class="input-data">
-						<input class="text" type="text" required v-model="signInData.username" />
-						<div class="underline"></div>
-						<label class="text">Identifiant</label>
+				<div class='form-data'>
+					<div class='input-data'>
+						<input class='text' type='text' id='identifiant' required v-model='signInData.username' />
+						<div class='underline'></div>
+						<label class='text'>Identifiant</label>
 					</div>
-					<div class="input-data">
-						<input class="text" type="text" required v-model="signInData.password" />
-						<div class="underline"></div>
-						<label class="text">Email</label>
+					<div class='input-data'>
+						<input class='text' type='text' id='email' required v-model='signInData.password' />
+						<div class='underline'></div>
+						<label class='text'>Email</label>
 					</div>
 				</div>
-				<div class="form-data">
-					<div class="input-data">
-						<input class="text" type="text" required v-model="signInData.email" />
-						<div class="underline"></div>
-						<label class="text">Identifiant</label>
+				<div class='form-data'>
+					<div class='input-data'>
+						<input class='text' type='password' id='password' required v-model='signInData.email' />
+						<div class='underline'></div>
+						<label class='text'>Mot de passe</label>
 					</div>
 				</div>
 			</form>
-			<classique_button text="Se Connecter" />
+			<classique_button text='Se Connecter' @click='creation_utilisateur' />
 		</div>
-		<div class="close-button" @click="backIndex" ref="closeButton">Retour</div>
+		<div class='close-button' @click='backIndex' ref='closeButton'>Retour</div>
 	</section>
 </template>
 
-<style scoped lang="scss">
+<style scoped lang='scss'>
 .module.login {
 	position: relative;
 	height: 100vh;
@@ -198,6 +231,7 @@ const backIndex = () => {
 			}
 		}
 	}
+
 	.container-login {
 		display: flex;
 		flex-direction: column;
@@ -235,6 +269,7 @@ const backIndex = () => {
 			}
 		}
 	}
+
 	.close-button {
 		font-size: 14rem;
 		@include SuisseIntl;
