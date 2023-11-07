@@ -12,6 +12,9 @@ defmodule UsersApiWeb.WorkteamsView do
 
   def render("workteams.json", %{workteams: workteams}) do
     %{id: workteams.id,
-      team_name: workteams.team_name}
+      team_name: workteams.team_name,
+      worker_id: workteams.worker_id,
+      manager_id: workteams.manager_id
+    }
   end
 end

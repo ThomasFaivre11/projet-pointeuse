@@ -106,8 +106,8 @@ defmodule UsersApi.TeamManagement do
   Returns all members of a team
   """
   def get_by_manager_id(manager_id) do
-    from(t in WorkTeams, where: t.manager_id == ^manager_id)
-    |> Repo.all()
+    Repo.all(from wt in WorkTeams, where: wt.manager_id == ^manager_id)
   end
+
 
 end
