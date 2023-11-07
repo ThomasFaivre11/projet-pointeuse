@@ -1,6 +1,10 @@
 <script setup>
 import gsap from 'gsap';
 import ButtonBlue from './Button-blue.vue';
+import workteams from "~/composables/workteams";
+import TeamUserCard from "~/components/TeamUserCard.vue";
+import user from "~/composables/user";
+import manager_token from "~/composables/user_token";
 
 const formUser = ref(null);
 const wrapperClose = ref(null);
@@ -9,7 +13,6 @@ const blueButton = ref(null);
 
 const profilData = reactive({
 	username: '',
-	password: '',
 	email: '',
 });
 
@@ -30,6 +33,24 @@ const open = () => {
 	tl.to(wrapperClose.value, { opacity: 0.9, duration: 1 }, '<');
 	tl.to(blueButton.value, { opacity: 0, duration: 1 }, '<');
 };
+
+const addUser = async (event) => {
+  /*
+   * Transmettre l'id du collab pour créer un nouveau TeamUserCard
+   */
+  event.preventDefault();
+  const user_to_add = await user().getUser("", profilData.email, profilData.username);
+  console.log(user_to_add);
+  const manager = await manager_token().search_id_manager(localStorage.getItem("user_token"));
+  console.log(manager);
+  await workteams().createWorkTeams("", manager.data[0].manager_id, user_to_add.data[0].id);
+  const newUser = {
+    manager_id: manager.data[0].manager_id,
+    username: profilData.username,
+    status: false,
+  };
+  emit('addUser', newUser);
+}
 </script>
 
 <template>
@@ -38,20 +59,15 @@ const open = () => {
 	</div>
 	<div class="form-user" ref="formContainer">
 		<div class="wrapper-close" @click="close" ref="wrapperClose"></div>
-		<form ref="formUser">
+		<form ref="formUser" @submit.prevent="addUser">
 			<h2>Ajouter un utilisateur</h2>
-			<div class="form-data">
-				<div class="input-data">
-					<input class="text" type="text" required v-model="profilData.username" />
-					<div class="underline"></div>
-					<label class="text">Identifiant</label>
-				</div>
-				<div class="input-data">
-					<input class="text" type="text" required v-model="profilData.password" />
-					<div class="underline"></div>
-					<label class="text">Mot de passe</label>
-				</div>
-			</div>
+      <div class="form-data">
+        <div class="input-data">
+          <input class="text" type="text" required v-model="profilData.username" />
+          <div class="underline"></div>
+          <label class="text">Identifiant</label>
+        </div>
+      </div>
 			<div class="form-data">
 				<div class="input-data">
 					<input class="text" type="text" required v-model="profilData.email" />
@@ -59,7 +75,7 @@ const open = () => {
 					<label class="text">Email</label>
 				</div>
 			</div>
-			<ButtonBlue text="Modifier" />
+			<ButtonBlue text="Ajouter" onclick="addUser"/>
 		</form>
 	</div>
 </template>
