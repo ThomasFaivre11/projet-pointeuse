@@ -105,7 +105,7 @@ export default {
 					<div class="overflow"></div>
 					<span>Mon Profil</span>
 				</li>
-				<li>
+				<li @click="disconnect">
 					<span class="line"></span>
 					<div class="overflow"></div>
 					<span>Déconnexion</span>
