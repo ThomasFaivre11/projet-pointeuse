@@ -4,6 +4,7 @@ defmodule UsersApi.TeamManagement.WorkTeams do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
+  @derive {Jason.Encoder, only: [:team_name, :worker_id, :manager_id]}
   schema "workteams" do
     field :team_name, :string
     field :worker_id, :binary_id
