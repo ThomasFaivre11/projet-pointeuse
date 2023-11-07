@@ -14,4 +14,5 @@ defmodule UsersApi.Accounts.UserToken do
     |> cast(attrs, [:user_id, :token])
     |> validate_required([:user_id, :token])
   end
+
 end

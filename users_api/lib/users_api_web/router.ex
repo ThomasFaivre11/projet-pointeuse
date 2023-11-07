@@ -31,6 +31,7 @@ defmodule UsersApiWeb.Router do
     # WorkTeams
     post "/workteams", WorkteamsController, :create
     get "/workteams/:manager_id", WorkteamsController, :get_by_manager_id
+    get "/searchIdManager/:token", SessionController, :get_manager_id
 
   end
 

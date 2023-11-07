@@ -1,12 +1,22 @@
 <script setup lang="ts">
-const { getWorkingTime } = workingtimes();
+import id_manager_module from '../composables/user_token';
+import token_mod from '../composables/useAuth';
 
+const module_check_token = token_mod();
+const module_token = id_manager_module();
 async function executeWorkingTime(){
+
+  const token = localStorage.getItem("user_token");
+  console.log(token)
+  const ok = module_check_token.check_token();
+  console.log(ok)
+  await module_token.search_id_manager(token);
+
   // const result = await getWorkingTime("0b13584d-850a-429f-960f-621a488b3793","bd53579a-2c28-4ded-80b6-1ae5c01daf2c");
-  getWorkingTime("0b13584d-850a-429f-960f-621a488b3793", "bd53579a-2c28-4ded-80b6-1ae5c01daf2c")
+  /* getWorkingTime("0b13584d-850a-429f-960f-621a488b3793", "bd53579a-2c28-4ded-80b6-1ae5c01daf2c")
       .then(result => {
         console.log(result);
-      });
+      });*/
 }
 
 const options = ref({
@@ -53,7 +63,7 @@ onMounted(() => {
 		<apexchart :key="series" height="400" width="600px" :options="options" :series="series"></apexchart>
 		<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="updateChart">Change</button>
 	</div>
-	<button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="executeWorkingTime">get full working time</button>
+	<button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="executeWorkingTime">get manager id</button>
 </template>
 
 <style scoped lang="scss">

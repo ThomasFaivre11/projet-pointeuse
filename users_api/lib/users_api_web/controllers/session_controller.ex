@@ -17,4 +17,34 @@ defmodule UsersApiWeb.SessionController do
         end
     end
   end
+
+  defimpl Jason.Encoder, for: Tuple do
+    def encode({:ok, value}, opts) do
+      # Vous pouvez choisir de convertir la tuple en une structure JSON que vous souhaitez
+      Jason.Encode.map(%{data: value}, opts)
+    end
+
+    def encode({:error, reason}, opts) do
+      Jason.Encode.map(%{error: reason}, opts)
+    end
+  end
+
+
+  def get_manager_id(conn, %{"token" => token}) do
+    case get_manager_id_by_token(token) do
+      nil ->
+        conn
+        |> send_resp(404, "Manager not found")
+      manager_id ->
+        conn
+        |> send_resp(200, Jason.encode!(%{manager_id: manager_id}))
+    end
+  end
+
+  def get_manager_id_by_token(token) do
+    case Repo.get_by(UserToken, token: token) do
+      nil -> {:error, :not_found}
+      user_token -> {:ok, user_token.user_id}
+    end
+  end
 end
