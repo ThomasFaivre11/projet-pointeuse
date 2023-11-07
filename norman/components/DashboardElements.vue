@@ -101,6 +101,11 @@ export default {
 					<div class="overflow"></div>
 					<span>Mon Profil</span>
 				</li>
+				<li>
+					<span class="line"></span>
+					<div class="overflow"></div>
+					<span>Déconnexion</span>
+				</li>
 			</ul>
 		</div>
 	</div>
