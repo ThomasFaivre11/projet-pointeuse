@@ -13,13 +13,20 @@ const useAuth = () => {
 				headers: myHeaders,
 				body: JSON.stringify(data_type),
 			});
-			if (response.ok) {
-				const login_response = await response.json();
-				const token = login_response['user_token'];
-				localStorage.setItem('user_token', token);
-				window.location.href = 'http://localhost:3000/dashboard';
-			} else {
-				console.log('problème de requete login');
+			if (response.ok){
+				const login_response = await response.json()
+				const user_id = login_response.user.id;
+				const type = login_response.user.type;
+				const token = login_response.token;
+				const obj_data = {
+					"token": token,
+					"user_id": user_id,
+					"type": type,
+				}
+				localStorage.setItem("user_token", JSON.stringify(obj_data))
+				setTimeout(window.location.href = "http://localhost:3000/dashboard",2);
+			}else {
+				console.log("problème de requete login")
 			}
 		} catch (e) {
 			console.log(e);

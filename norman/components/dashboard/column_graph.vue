@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import id_manager_module from '../composables/user_token';
-import token_mod from '../composables/useAuth';
+import id_manager_module from '../../composables/user_token';
+import token_mod from '../../composables/useAuth';
 
 const module_check_token = token_mod();
 const module_token = id_manager_module();
@@ -13,10 +13,10 @@ async function executeWorkingTime(){
   await module_token.search_id_manager(token);
 
   // const result = await getWorkingTime("0b13584d-850a-429f-960f-621a488b3793","bd53579a-2c28-4ded-80b6-1ae5c01daf2c");
-  /* getWorkingTime("0b13584d-850a-429f-960f-621a488b3793", "bd53579a-2c28-4ded-80b6-1ae5c01daf2c")
+  getWorkingTime("0b13584d-850a-429f-960f-621a488b3793", "bd53579a-2c28-4ded-80b6-1ae5c01daf2c")
       .then(result => {
         console.log(result);
-      });*/
+      });
 }
 
 const options = ref({
