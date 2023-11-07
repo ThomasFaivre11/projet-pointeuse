@@ -33,23 +33,27 @@ const useAuth = () => {
 		}
 	}
 
-	async function disconnect(token: string) {
+	async function disconnect() {
 		try {
-			const data_type = {
-				token: `${token}`,
-			};
+			const token_obj = localStorage.getItem('user_token')
+			const obj = JSON.parse(token_obj)
+			const data_type = JSON.stringify({
+
+				"token": `${obj.token}`,
+
+			})
 			localStorage.setItem('user_token', null);
 			const url = 'http://localhost:4000/api/disconnect';
 			const resp = await fetch(url, {
-				method: 'POST',
+				method: 'DELETE',
 				headers: myHeaders,
-				body: JSON.stringify(data_type),
+				body: data_type,
 			});
 			if (resp.ok) {
 				localStorage.removeItem('user_token');
-				// localStorage.removeItem('user_id');
-				// localStorage.removeItem('user_role');
-				navigateTo('/');
+				window.location.href = 'http://localhost:3000'
+			}else {
+				console.log("prblème de localstorage")
 			}
 		} catch (e) {
 			console.log(e);

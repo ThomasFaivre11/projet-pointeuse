@@ -67,7 +67,7 @@ export default {
 			tl.to(this.$refs.sideBar, { xPercent: -110, duration: 1, ease: 'power3.inOut' });
 		},
 		disconnect() {
-			useAuth().logout();
+			useAuth().disconnect();
 		},
 	},
 };
@@ -105,7 +105,7 @@ export default {
 					<div class="overflow"></div>
 					<span>Mon Profil</span>
 				</li>
-				<li @click="disconnect">
+				<li @click="useAuth().disconnect()">
 					<span class="line"></span>
 					<div class="overflow"></div>
 					<span>Déconnexion</span>
