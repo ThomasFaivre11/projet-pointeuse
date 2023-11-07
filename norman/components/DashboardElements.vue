@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import Profil from '@/components/Profil.vue';
 import Dashboard from '@/components/dashboard.vue';
 import Team from '@/components/Team.vue';
+import useAuth from '@/composables/useAuth';
 
 export default {
 	data() {
@@ -65,6 +66,9 @@ export default {
 
 			tl.to(this.$refs.sideBar, { xPercent: -110, duration: 1, ease: 'power3.inOut' });
 		},
+		disconnect() {
+			useAuth().logout();
+		},
 	},
 };
 </script>
@@ -113,7 +117,7 @@ export default {
 		<Dashboard v-if="this.Dashboard.page" />
 		<Team v-if="this.Team.page" />
 		<Profil v-if="this.Profil.page" />
-    <div class="partial interloader" ref="interloader">
+		<div class="partial interloader" ref="interloader">
 			<div class="background first" ref="firstBackground"></div>
 			<div class="background second" ref="secondBackground"></div>
 			<div class="background third" ref="thirdBackground">
