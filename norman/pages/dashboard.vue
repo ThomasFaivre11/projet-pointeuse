@@ -6,6 +6,9 @@ import DashboardElements from '~~/components/DashboardElements.vue';
 definePageMeta({
 	middleware: ['auth'],
 });
+
+const user = localStorage.getItem("user_token")
+console.log(user)
 </script>
 
 <template>

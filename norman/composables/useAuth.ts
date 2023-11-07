@@ -15,8 +15,15 @@ const useAuth = () => {
 			});
 			if (response.ok){
 				const login_response = await response.json()
+				const user_id = login_response.user.id;
+				const type = login_response.user.type;
 				const token = login_response.token;
-				localStorage.setItem("user_token", token)
+				const obj_data = {
+					"token": token,
+					"user_id": user_id,
+					"type": type,
+				}
+				localStorage.setItem("user_token", JSON.stringify(obj_data))
 				setTimeout(window.location.href = "http://localhost:3000/dashboard",2);
 			}else {
 				console.log("problème de requete login")

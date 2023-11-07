@@ -4,7 +4,7 @@ defmodule UsersApi.Admin.User do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
-  @derive {Jason.Encoder, only: [:id, :username, :email, :inserted_at, :updated_at]}
+  @derive {Jason.Encoder, only: [:id, :username, :email, :inserted_at, :updated_at, :type]}
   schema "users" do
     field :type, :string
     field :username, :string
