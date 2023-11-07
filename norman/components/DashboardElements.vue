@@ -108,7 +108,7 @@ export default {
 		<Dashboard v-if="this.Dashboard.page" />
 		<Team v-if="this.Team.page" />
 		<Profil v-if="this.Profil.page" />
-		<div class="partial interloader" ref="interloader">
+    <div class="partial interloader" ref="interloader">
 			<div class="background first" ref="firstBackground"></div>
 			<div class="background second" ref="secondBackground"></div>
 			<div class="background third" ref="thirdBackground">

@@ -13,7 +13,7 @@ defmodule UsersApiWeb.Router do
     # get "/users/", UserController, :index
     get "/users/", UserController, :filter
     post "/login", UserController, :login
-    post "/disconnect", UserController, :disconnect
+    delete "/disconnect", SessionController, :disconnect
     get "/users/:id", UserController, :show
     put "/users/:id", UserController, :update
     delete "/users/:id", UserController, :delete
