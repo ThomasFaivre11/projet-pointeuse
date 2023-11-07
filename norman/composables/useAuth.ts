@@ -11,7 +11,7 @@ const useAuth = () => {
 			const response = await fetch(url, {
 				method: "POST",
 				headers: myHeaders,
-				body: JSON.stringify({user: data_type}),
+				body: JSON.stringify(data_type),
 			});
 			if (response.ok){
 				const login_response = await response.json()
@@ -26,13 +26,33 @@ const useAuth = () => {
 		}
 	}
 
+	async function disconnect(token: string){
+		try{
+			const data_type = {
+				token: `${token}`
+			}
+			localStorage.setItem("user_token", null)
+			const url = 'http://localhost:4000/api/disconnect'
+			const resp = await fetch(url, {
+				method: "POST",
+				headers: myHeaders,
+				body: JSON.stringify(data_type)
+			})
+			if (resp.ok){
+				console.log("déconnexion !")
+				window.location.href = "http://localhost:3000/"
+			}
+		}catch (e) {
+			console.log(e)
+		}
+	}
+
 	function check_token() {
 		const token = localStorage.getItem('user_token');
 		return !!token;
 	}
 
 	return {
-
 		login,
 		check_token
 	};

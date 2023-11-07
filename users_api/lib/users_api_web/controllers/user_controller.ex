@@ -15,11 +15,10 @@ defmodule UsersApiWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     case Admin.create_user(user_params) do
       {:ok, %User{} = user} ->
-        {:ok, _user, token} = Guardian.create_token(user)
         conn
         |> put_status(:created)
         |> put_resp_header("location", Routes.user_path(conn, :show, user))
-        |> json(%{user: %{id: user.id, username: user.username, email: user.email}, token: token})
+        |> json(%{user: %{id: user.id, username: user.username, email: user.email}})
       {:error, reason} ->
         conn
         |> put_status(:bad_request)
@@ -30,6 +29,20 @@ defmodule UsersApiWeb.UserController do
   def show(conn, %{"id" => id}) do
     user = Admin.get_user!(id)
     render(conn, "show.json", user: user)
+  end
+
+  def disconnect(conn, %{"token" => token}) do
+    case Repo.get_by(UserToken, token: token) do
+      nil ->
+        send_resp(conn, :not_found, "Token not found")
+      user_token ->
+        case Repo.delete(user_token) do
+          {:ok, _struct} ->
+            send_resp(conn, :ok, "User disconnected")
+          {:error, reason} ->
+            send_resp(conn, :internal_server_error, "Internal server error: #{reason}")
+        end
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
@@ -44,6 +57,7 @@ defmodule UsersApiWeb.UserController do
     users = Admin.get_users_by_email_and_username(email, username)
     render(conn, "index.json", users: users)
   end
+
 
   def login(conn, %{"email" => email, "password" => password}) do
     case Guardian.authenticate(email, password) do

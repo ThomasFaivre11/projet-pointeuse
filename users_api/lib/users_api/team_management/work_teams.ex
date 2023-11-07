@@ -15,7 +15,7 @@ defmodule UsersApi.TeamManagement.WorkTeams do
   @doc false
   def changeset(work_teams, attrs) do
     work_teams
-    |> cast(attrs, [:team_name])
-    |> validate_required([:team_name])
+    |> cast(attrs, [:team_name, :manager_id, :worker_id])
+    |> validate_required([:team_name, :manager_id, :worker_id])
   end
 end

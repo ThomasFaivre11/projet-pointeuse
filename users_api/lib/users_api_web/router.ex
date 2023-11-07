@@ -13,6 +13,7 @@ defmodule UsersApiWeb.Router do
     # get "/users/", UserController, :index
     get "/users/", UserController, :filter
     post "/login", UserController, :login
+    delete "/disconnect", SessionController, :disconnect
     get "/users/:id", UserController, :show
     put "/users/:id", UserController, :update
     delete "/users/:id", UserController, :delete
@@ -27,6 +28,9 @@ defmodule UsersApiWeb.Router do
     get "/workingtimes/:user_id", WorkingtimeController, :filter_between # all between start and end
     put "/workingtimes/:id", WorkingtimeController, :update
     put "/workingtimes/", WorkingtimeController, :update_end
+    # WorkTeams
+    post "/workteams", WorkteamsController, :create
+    get "/workteams/:manager_id", WorkteamsController, :get_by_manager_id
 
   end
 
