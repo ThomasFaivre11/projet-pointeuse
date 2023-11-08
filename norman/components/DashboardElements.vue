@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import Profil from '@/components/Profil.vue';
 import Dashboard from '@/components/dashboard/column_graph.vue';
 import Team from '@/components/Team.vue';
+import Crud from '@/components/Crud.vue';
 import useAuth from '@/composables/useAuth';
 
 export default {
@@ -20,6 +21,10 @@ export default {
 				nav: false,
 				page: false,
 			},
+			Crud: {
+				nav: false,
+				page: false,
+			},
 		};
 	},
 	mounted: function () {
@@ -31,15 +36,17 @@ export default {
 		Profil,
 		Dashboard,
 		Team,
+		Crud,
 	},
 	methods: {
-		interloader(profilActive, dasboardActive, teamActive) {
+		interloader(profilActive, dasboardActive, teamActive, crudActive) {
 			const tl = gsap.timeline();
 
 			tl.add(() => {
 				this.Profil.nav = profilActive;
 				this.Dashboard.nav = dasboardActive;
 				this.Team.nav = teamActive;
+				this.Crud.nav = crudActive;
 			});
 			tl.set(this.$refs.sideBar, { pointerEvents: 'none' });
 			tl.set([this.$refs.firstBackground, this.$refs.secondBackground, this.$refs.thirdBackground], { yPercent: 100 });
@@ -50,6 +57,7 @@ export default {
 				this.Profil.page = profilActive;
 				this.Dashboard.page = dasboardActive;
 				this.Team.page = teamActive;
+				this.Crud.page = crudActive;
 			});
 			tl.to([this.$refs.thirdBackground, this.$refs.secondBackground, this.$refs.firstBackground], { yPercent: -100, duration: 1.2, ease: 'power3.inOut', stagger: 0.15 });
 			tl.to(this.$refs.logoContainer, { yPercent: 100, duration: 1.2, ease: 'power3.inOut' }, '<');
@@ -90,20 +98,25 @@ export default {
 			</div>
 			<div class="title">Sophie</div>
 			<ul>
-				<li :class="{ active: this.Dashboard.nav }" @click="interloader(false, true, false)">
+				<li :class="{ active: this.Dashboard.nav }" @click="interloader(false, true, false, false)">
 					<span class="line"></span>
 					<div class="overflow"></div>
 					<span>Dashboard</span>
 				</li>
-				<li :class="{ active: this.Team.nav }" @click="interloader(false, false, true)">
+				<li :class="{ active: this.Team.nav }" @click="interloader(false, false, true, false)">
 					<span class="line"></span>
 					<div class="overflow"></div>
 					<span>Mon Equipe</span>
 				</li>
-				<li :class="{ active: this.Profil.nav }" @click="interloader(true, false, false)">
+				<li :class="{ active: this.Profil.nav }" @click="interloader(true, false, false, false)">
 					<span class="line"></span>
 					<div class="overflow"></div>
 					<span>Mon Profil</span>
+				</li>
+				<li :class="{ active: this.Crud.nav }" @click="interloader(false, false, false, true)">
+					<span class="line"></span>
+					<div class="overflow"></div>
+					<span>CRUD</span>
 				</li>
 				<li @click="useAuth().disconnect()">
 					<span class="line"></span>
@@ -117,6 +130,7 @@ export default {
 		<Dashboard v-if="this.Dashboard.page" />
 		<Team v-if="this.Team.page" />
 		<Profil v-if="this.Profil.page" />
+		<Crud v-if="this.Crud.page" />
 		<div class="partial interloader" ref="interloader">
 			<div class="background first" ref="firstBackground"></div>
 			<div class="background second" ref="secondBackground"></div>
