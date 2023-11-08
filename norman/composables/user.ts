@@ -57,7 +57,7 @@ const user = () => {
 				method: 'GET',
 			});
 			if (resp.ok) {
-				console.log('User retourné');
+				//console.log('User retourné');
 			} else {
 				throw new Error(`Erreur HTTP! Statut: ${resp.status}`);
 			}
@@ -105,8 +105,27 @@ const user = () => {
 		}
 	}
 
+	async function get_all_users(){
+		const tab_users = [];
+		try {
+			const url = 'http://localhost:4000/api/users';
+			const response = await fetch(url, {
+				method: "GET"
+			});
+			if (response.ok){
+				const users = await response.json()
+				const all_users = users.data
+				tab_users.push(all_users);
+			}
+		}catch (e) {
+			console.log(e)
+		}
+		return tab_users;
+	}
+
 	return {
 		createUser,
+		get_all_users,
 		getUser,
 		updateUser,
 		deleteUser,
