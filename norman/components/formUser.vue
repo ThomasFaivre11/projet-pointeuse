@@ -33,21 +33,20 @@ const open = () => {
 	tl.to(wrapperClose.value, { opacity: 0.9, duration: 1 }, '<');
 	tl.to(blueButton.value, { opacity: 0, duration: 1 }, '<');
 };
-
+const emit = defineEmits(['addUser']);
 const addUser = async (event) => {
   /*
-   * Transmettre l'id du collab pour créer un nouveau TeamUserCard
+   * Creer le Workteams ici et envoyer un signal pour refresh
    */
   event.preventDefault();
+  // Get l'user à ajouter à l'équipe
   const user_to_add = await user().getUser("", profilData.email, profilData.username);
   console.log(user_to_add);
-  const manager = await manager_token().search_id_manager(localStorage.getItem("user_token"));
-  console.log(manager);
-  await workteams().createWorkTeams("", manager.data[0].manager_id, user_to_add.data[0].id);
+  // Créer un workteam avec manager_id et user_id
+  await workteams().createWorkTeams("B", JSON.parse(localStorage.getItem("user_token")).user_id, user_to_add.data[0].id);
   const newUser = {
-    manager_id: manager.data[0].manager_id,
-    username: profilData.username,
     status: false,
+    user: user_to_add,
   };
   emit('addUser', newUser);
 }
@@ -75,7 +74,7 @@ const addUser = async (event) => {
 					<label class="text">Email</label>
 				</div>
 			</div>
-			<ButtonBlue text="Ajouter" onclick="addUser"/>
+			<ButtonBlue text="Ajouter" @click="addUser"/>
 		</form>
 	</div>
 </template>

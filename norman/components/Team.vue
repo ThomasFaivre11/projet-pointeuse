@@ -1,7 +1,6 @@
 <script>
-import formUser from './formUser.vue';
+import formUser from "~/components/formUser.vue";
 import workteams from "~/composables/workteams";
-import manager_token from "~/composables/user_token";
 import TeamUserCard from "~/components/TeamUserCard.vue";
 import user from "~/composables/user";
 
@@ -18,15 +17,36 @@ export default {
   },
   mounted() {
     this.$nextTick(async () => {
+      await this.print_team();
+    });
+  },
+  methods:{
+    print_team: async function () {
+      this.workers = [];
+      this.workers_data = [];
       const manager_id = localStorage.getItem("user_token");
       const obj_manager = JSON.parse(manager_id);
       const workers = await workteams().getWorkTeamsByManager(obj_manager.user_id);
       this.workers = workers;
       for (const w of workers) {
-        // Récupération de l'username et du status
         this.workers_data.push(await user().getUser(w.worker_id, "", ""));
       }
-    });
+    },
+    add_user: async function (newValue) {
+      console.log("catch catch catch");
+      console.log(newValue.user.data[0].username);
+      const userToAdd = {
+        data: {
+          email: newValue.user.data[0].email,
+          id: newValue.user.data[0].id,
+          password: newValue.user.data[0].password,
+          type: newValue.user.data[0].type,
+          username: newValue.user.data[0].username
+        }
+      };
+      console.log(userToAdd);
+      this.workers_data.push(userToAdd);
+    }
   },
 };
 </script>
@@ -40,7 +60,7 @@ export default {
           :name_user="worker.data.username"
           :status_user="worker.data.status" />
     </div>
-		<formUser />
+		<formUser @addUser="add_user"/>
   </div>
 </template>
 
