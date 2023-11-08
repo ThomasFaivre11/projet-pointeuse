@@ -2,9 +2,7 @@
 import gsap from 'gsap';
 import ButtonBlue from './Button-blue.vue';
 import workteams from "~/composables/workteams";
-import TeamUserCard from "~/components/TeamUserCard.vue";
 import user from "~/composables/user";
-import manager_token from "~/composables/user_token";
 
 const formUser = ref(null);
 const wrapperClose = ref(null);
@@ -35,9 +33,6 @@ const open = () => {
 };
 const emit = defineEmits(['addUser']);
 const addUser = async (event) => {
-  /*
-   * Creer le Workteams ici et envoyer un signal pour refresh
-   */
   event.preventDefault();
   // Get l'user à ajouter à l'équipe
   const user_to_add = await user().getUser("", profilData.email, profilData.username);
@@ -49,6 +44,7 @@ const addUser = async (event) => {
     user: user_to_add,
   };
   emit('addUser', newUser);
+  close();
 }
 </script>
 
