@@ -1,9 +1,7 @@
 <script setup>
-import Auth from '~~/components/Auth.vue';
+import Crud from '@/components/Crud.vue';
 </script>
 
 <template>
-	<Auth />
-
-
+	<Crud />
 </template>
