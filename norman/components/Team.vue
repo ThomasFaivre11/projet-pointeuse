@@ -3,6 +3,7 @@ import formUser from './formUser.vue';
 import workteams from "~/composables/workteams";
 import manager_token from "~/composables/user_token";
 import TeamUserCard from "~/components/TeamUserCard.vue";
+import user from "~/composables/user";
 
 export default {
 	components: {
@@ -12,13 +13,19 @@ export default {
   data() {
     return {
       workers: [], // Initialisez le tableau workers
+      workers_data: [],
     };
   },
   mounted() {
     this.$nextTick(async () => {
-      const manager = await manager_token().search_id_manager(localStorage.getItem("user_token"));
-      const workers = await workteams().getWorkTeamsByManager(manager);
+      const manager_id = localStorage.getItem("user_token");
+      const obj_manager = JSON.parse(manager_id);
+      const workers = await workteams().getWorkTeamsByManager(obj_manager.user_id);
       this.workers = workers;
+      for (const w of workers) {
+        // Récupération de l'username et du status
+        this.workers_data.push(await user().getUser(w.worker_id, "", ""));
+      }
     });
   },
 };
@@ -28,7 +35,10 @@ export default {
 	<div class="container-team">
 		<h2>Equipes</h2>
     <div class="team">
-      <TeamUserCard name_user="Zeeee" :status_user=true />
+      <TeamUserCard
+          v-for="worker in workers_data"
+          :name_user="worker.data.username"
+          :status_user="worker.data.status" />
     </div>
 		<formUser />
   </div>
