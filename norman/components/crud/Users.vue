@@ -1,7 +1,11 @@
 <script setup>
 import gsap from 'gsap';
+import {ref} from 'vue';
 import ButtonBlue from '@/components/Button-blue.vue';
+import utilisateur from '../../composables/user';
 
+
+const user_module = utilisateur();
 const formUser = ref(null);
 const wrapperClose = ref(null);
 const formContainer = ref(null);
@@ -31,7 +35,22 @@ const open = (username, email) => {
 		profilData.email = email;
 	});
 };
+
+const users = reactive(await user_module.get_all_users());
+onMounted(async () => {
+
+});
+
+const openModifyDialog = (user) => {
+  console.log('Modifier', user);
+};
+
+const deleteUser = async (userId) => {
+  console.log('Supprimer', userId);
+};
+
 </script>
+
 
 <template>
 	<div class="form-user" ref="formContainer">
@@ -75,16 +94,25 @@ const open = (username, email) => {
 			</tr>
 		</thead>
 		<tbody>
-			<!-- Mettre un v-for sur le tr -->
-			<tr>
-				<td>Greg</td>
-				<td>Greg@gmail.com</td>
-				<td>Admin</td>
-				<td class="button-container">
-					<button class="modify-button" @click="open('Greg', 'Greg@gmail.com')">Modifier</button>
-					<button class="delete-button">Supprimer</button>
-				</td>
-			</tr>
+			<!-- Mettre un v-for sur le tr-->
+      <!-- 	<tr>
+          <td>Greg</td>
+          <td>Greg@gmail.com</td>
+          <td>Admin</td>
+          <td class="button-container">
+            <button class="modify-button" @click="open('Greg', 'Greg@gmail.com')">Modifier</button>
+            <button class="delete-button">Suppributton>
+          </td>
+        </tr>-->
+        <tr v-for="user in users[0]" :key="user.id">
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.type }}</td>
+          <td class="button-container">
+            <button class="modify-button" @click="open(user.username, user.email)">Modifier</button>
+            <button class="delete-button">Supprimer</button>
+          </td>
+        </tr>
 		</tbody>
 	</table>
 </template>
