@@ -50,6 +50,7 @@ export default {
 	width: 100%;
 	min-height: 100vh;
 	padding-top: 100px;
+	position: relative;
 
 	h2 {
 		@include SuisseIntl;
@@ -61,6 +62,10 @@ export default {
 
 	&-items {
 		margin-top: 60px;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
 
 		@include desktop {
 			margin-top: 120px;
@@ -70,6 +75,7 @@ export default {
 			display: flex;
 			align-items: center;
 			border: 1px solid $darkblue;
+			width: fit-content;
 
 			&-item {
 				@include SuisseIntl;
@@ -98,6 +104,7 @@ export default {
 
 		&-data {
 			margin-top: 60px;
+			width: 100%;
 
 			@include desktop {
 				margin-top: 120px;
