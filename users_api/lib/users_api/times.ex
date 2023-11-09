@@ -131,9 +131,9 @@ defmodule UsersApi.Times do
     |> Repo.all()
   end
 
-  def get_workingtime_between_start_end(wt_start, wt_end) do
+  def get_workingtime_between_start_end(user_id, wt_start, wt_end) do
     from(w in Workingtime,
-      where: w.start <= ^wt_end and w.end >= ^wt_start)
+      where: w.start <= ^wt_end and w.end >= ^wt_start and w.user_id == ^user_id)
     |> Repo.all()
   end
 

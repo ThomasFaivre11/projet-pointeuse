@@ -55,7 +55,7 @@ defmodule UsersApiWeb.WorkingtimeController do
   end
 
   def filter_between(conn, %{"start" => wt_start, "end" => wt_end}) do
-    workingtimes = Times.get_workingtime_between_start_end(wt_start, wt_end) || []
+    workingtimes = Times.get_workingtime_between_start_end(conn.params["user_id"], wt_start, wt_end) || []
     render(conn, "index.json", workingtimes: workingtimes)
   end
 
