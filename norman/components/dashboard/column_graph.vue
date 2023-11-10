@@ -201,6 +201,17 @@ function decimalToTime(decimal) {
   return `${formattedHours}.${formattedMinutes}`;
 }
 
+const startClock = async () => {
+  const now = new Date();
+  const nowDate = now.toISOString().slice(0, 19);
+  //console.log(JSON.parse(localStorage.getItem("user_token")).user_id);
+  await clock().createClock(JSON.parse(localStorage.getItem("user_token")).user_id, nowDate, true);
+  await workingtimes().createWorkingTimes(JSON.parse(localStorage.getItem("user_token")).user_id, nowDate, "");
+}
+
+const endClock = async () => {
+
+}
 onMounted(async () => {
   await dataChart();
 	updateChart();
@@ -209,9 +220,9 @@ onMounted(async () => {
 
 <template>
 	<div class="dashboard-container">
-		<div v-if="this.role === `employee`" class="button-container">
-			<button class="clock-button launch">Démarrer</button>
-			<button class="clock-button stop">Stop</button>
+		<div class="button-container">
+			<button class="clock-button launch" @click="startClock">Démarrer</button>
+			<button class="clock-button stop" @click="endClock">Stop</button>
 		</div>
 		<h2>Profil</h2>
 		<apexchart :key="series" height="400" width="600px" :options="options" :series="series"></apexchart>
