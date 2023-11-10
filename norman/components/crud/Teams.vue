@@ -24,9 +24,8 @@ const teams = reactive(all_teams)
       </div>
       <div class="team">
         <TeamUserCard
-            v-for="worker in team.participant"
-            :key="worker.username"
-            :name_user="worker.username"
+            v-for="worker in team.participant" :key="worker.id"
+            :name_user="worker.email"
             :status_user="worker.type" />
       </div>
     </div>
