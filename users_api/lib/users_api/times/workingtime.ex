@@ -16,6 +16,6 @@ defmodule UsersApi.Times.Workingtime do
   def changeset(workingtime, attrs) do
     workingtime
     |> cast(attrs, [:start, :end, :user_id])
-    |> validate_required([:start, :end, :user_id])
+    |> validate_required([:start, :user_id])
   end
 end
