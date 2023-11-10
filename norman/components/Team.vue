@@ -3,6 +3,7 @@ import formUser from '~/components/formUser.vue';
 import workteams from '~/composables/workteams';
 import TeamUserCard from '~/components/TeamUserCard.vue';
 import user from '~/composables/user';
+import useAuth from '~/composables/useAuth';
 
 export default {
 	components: {
@@ -13,6 +14,7 @@ export default {
 		return {
 			workers: [], // Initialisez le tableau workers
 			workers_data: [],
+			role: useAuth().get_role(),
 		};
 	},
 	mounted() {
@@ -57,7 +59,7 @@ export default {
 		<div class="team">
 			<TeamUserCard v-for="worker in workers_data" :name_user="worker.data.username" :status_user="worker.data.status" />
 		</div>
-		<formUser @addUser="add_user" />
+		<formUser v-if="this.role !== `employee`" @addUser="add_user" />
 	</div>
 </template>
 
