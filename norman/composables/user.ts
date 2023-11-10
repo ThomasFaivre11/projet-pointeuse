@@ -7,7 +7,7 @@ const user = () => {
 	myHeaders.append('Content-Type', 'application/json');
 	let base_url = 'http://localhost:4000/api/users';
 
-	async function createUser(type: string, username: string, password: string, email: string) {
+	async function createUser(type: string, username: string, password: string, email: string, action: string) {
 		try {
 			const userData = {
 				type: `${type}`,
@@ -24,17 +24,19 @@ const user = () => {
 				const creationResponse = await resp.json();
 				console.log('User créé avec succès');
 				let log = false
-				try {
-					await useAuthModule.login(email, password)
-					log = true;
-				}catch (err){
-					console.log(err)
-					console.log("problème de loggin")
-				}
-				if (log){
-					console.log(`l'utilisateur ${username} est connecté`)
-				}else {
-					console.log("problème de connexion")
+				if (action === "connexion"){
+					try {
+						await useAuthModule.login(email, password)
+						log = true;
+					}catch (err){
+						console.log(err)
+						console.log("problème de loggin")
+					}
+					if (log){
+						console.log(`l'utilisateur ${username} est connecté`)
+					}else {
+						console.log("problème de connexion")
+					}
 				}
 			}
 		} catch (e) {

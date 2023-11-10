@@ -1,6 +1,6 @@
 <script setup>
-import gsap from 'gsap';
 import { ref } from 'vue';
+import gsap from "gsap";
 import ButtonBlue from '@/components/Button-blue.vue';
 import utilisateur from '../../composables/user';
 
@@ -15,6 +15,8 @@ const profilData = reactive({
 	email: '',
 	password: '',
 });
+
+const users = reactive(await user_module.get_all_users());
 
 const close = () => {
 	const tl = gsap.timeline();
@@ -36,16 +38,15 @@ const open = (username, email) => {
 	});
 };
 
-const users = reactive(await user_module.get_all_users());
 const openModifyDialog = async (user) => {
   const index = users[0].findIndex(u => u.email === user.email);
-  console.log(users[0][index])
   users[0][index].email = user.email;
   users[0][index].username = user.username;
   users[0][index].password = user.password;
   await user_module.updateUser( users[0][index].id, users[0][index].type, users[0][index].username, users[0][index].password, users[0][index].email,);
   close()
 };
+
 
 const deleteUser = async (user) => {
   const id_user = user.id;
@@ -68,7 +69,7 @@ const deleteUser = async (user) => {
 	<div class="form-user" ref="formContainer">
 		<div class="wrapper-close" @click="close" ref="wrapperClose"></div>
 		<form ref="formUser" @submit.prevent="addUser">
-			<h2>Ajouter un utilisateur</h2>
+			<h2>Modifier un utilisateur</h2>
 			<div class="form-data">
 				<div class="input-data">
 					<input class="text" type="text" required v-model="profilData.username" />
@@ -106,25 +107,15 @@ const deleteUser = async (user) => {
 			</tr>
 		</thead>
 		<tbody>
-			<!-- Mettre un v-for sur le tr-->
-      <!-- 	<tr>
-          <td>Greg</td>
-          <td>Greg@gmail.com</td>
-          <td>Admin</td>
-          <td class="button-container">
-            <button class="modify-button" @click="open('Greg', 'Greg@gmail.com')">Modifier</button>
-            <button class="delete-button">Suppributton>
-          </td>
-        </tr>-->
-        <tr v-for="user in users[0]" :key="user.id">
-          <td>{{ user.username }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.type }}</td>
-          <td class="button-container">
-            <button class="modify-button" @click="open(user.username, user.email)">Modifier</button>
-            <button class="delete-button" @click="deleteUser(user)">Supprimer</button>
-          </td>
-        </tr>
+      <tr v-for="user in users[0]" :key="user.id">
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.type }}</td>
+        <td class="button-container">
+          <button class="modify-button" @click="open(user.username, user.email)">Modifier</button>
+          <button class="delete-button" @click="deleteUser(user)">Supprimer</button>
+        </td>
+      </tr>
 		</tbody>
 	</table>
 </template>
@@ -208,6 +199,10 @@ table {
 			&.modify-button {
 				border-right: 1px solid $darkblue;
 			}
+
+      &.create-button {
+        border-left: 1px solid $darkblue;
+      }
 
 			&:hover {
 				background-color: $darkblue;
