@@ -19,6 +19,7 @@
     "@nuxt/ui": "^0.3.3",
     "apexcharts": "^3.44.0",
     "gsap": "^3.11.2",
+    "vue": "^3.3.8",
     "vue-apexcharts": "^1.6.2",
     "vue3-apexcharts": "^1.4.4"
   }

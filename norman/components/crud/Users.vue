@@ -1,6 +1,6 @@
 <script setup>
 import gsap from 'gsap';
-import {ref} from 'vue';
+import { ref } from 'vue';
 import ButtonBlue from '@/components/Button-blue.vue';
 import utilisateur from '../../composables/user';
 
@@ -37,16 +37,28 @@ const open = (username, email) => {
 };
 
 const users = reactive(await user_module.get_all_users());
-onMounted(async () => {
-
-});
-
-const openModifyDialog = (user) => {
-  console.log('Modifier', user);
+const openModifyDialog = async (user) => {
+  const index = users[0].findIndex(u => u.email === user.email);
+  console.log(users[0][index])
+  users[0][index].email = user.email;
+  users[0][index].username = user.username;
+  users[0][index].password = user.password;
+  await user_module.updateUser( users[0][index].id, users[0][index].type, users[0][index].username, users[0][index].password, users[0][index].email,);
+  close()
 };
 
-const deleteUser = async (userId) => {
-  console.log('Supprimer', userId);
+const deleteUser = async (user) => {
+  const id_user = user.id;
+  const user_connected = await user_module.deleteUser(id_user);
+  if (user_connected.status === 500){
+    alert("l'utilisateur est déjà connecté")
+  }else {
+    console.log('Supprimer', user);
+    const index = users[0].findIndex(u => u.id === id_user);
+    if (index !== -1) {
+      users[0].splice(index, 1);
+    }
+  }
 };
 
 </script>
@@ -73,12 +85,12 @@ const deleteUser = async (userId) => {
 			</div>
 			<div class="form-data">
 				<div class="input-data">
-					<input class="text" type="text" required v-model="profilData.password" />
+					<input class="text" type="password" required v-model="profilData.password" />
 					<div class="underline"></div>
 					<label class="text">Mot de passe</label>
 				</div>
 			</div>
-			<ButtonBlue text="Modifier" @click="addUser" />
+			<ButtonBlue text="Modifier" @click="openModifyDialog(profilData)" />
 		</form>
 	</div>
 	<table>
@@ -110,7 +122,7 @@ const deleteUser = async (userId) => {
           <td>{{ user.type }}</td>
           <td class="button-container">
             <button class="modify-button" @click="open(user.username, user.email)">Modifier</button>
-            <button class="delete-button">Supprimer</button>
+            <button class="delete-button" @click="deleteUser(user)">Supprimer</button>
           </td>
         </tr>
 		</tbody>

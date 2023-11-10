@@ -99,7 +99,7 @@ const user = () => {
 			const resp = fetch(url, {
 				method: 'DELETE',
 			});
-			console.log('user deleted');
+			return resp;
 		} catch (e) {
 			console.log('Erreur lors de la suppression de l\'user\n' + e);
 		}

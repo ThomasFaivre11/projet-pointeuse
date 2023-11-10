@@ -2,12 +2,11 @@ defmodule UsersApi.Admin do
   @moduledoc """
   The Admin context.
   """
-
   import Ecto.Query, warn: false
   alias UsersApi.Repo
-alias UsersApi.Auth.Guardian
+  alias UsersApi.Accounts.UserToken
+  alias UsersApi.Auth.Guardian
   alias UsersApi.Admin.User
-
   @doc """
   Returns the list of users.
 
@@ -131,6 +130,17 @@ alias UsersApi.Auth.Guardian
     User
     |> where(email: ^email)
     |> Repo.one()
+  end
+
+  def delete_user_tokens(user_id) do
+    from(ut in UsersApi.Accounts.UserToken, where: ut.user_id == ^user_id)
+    |> Repo.delete_all()
+  end
+
+
+  def delete_user(user_id) do
+    from(ut in UsersApi.Admin.User, where: ut.id == ^user_id)
+    |> Repo.delete_all()
   end
 
 end

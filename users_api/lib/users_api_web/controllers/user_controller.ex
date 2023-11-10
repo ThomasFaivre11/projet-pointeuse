@@ -4,6 +4,7 @@ defmodule UsersApiWeb.UserController do
   alias UsersApi.Auth.Guardian
   alias UsersApi.Admin
   alias UsersApi.Admin.User
+  alias UsersApi.Accounts.UserToken
 
   action_fallback UsersApiWeb.FallbackController
 
@@ -82,11 +83,9 @@ defmodule UsersApiWeb.UserController do
 
   def delete(conn, %{"id" => id}) do
     user = Admin.get_user!(id)
-
     with {:ok, %User{}} <- Admin.delete_user(user) do
       send_resp(conn, :no_content, "")
     end
   end
-
 
 end
