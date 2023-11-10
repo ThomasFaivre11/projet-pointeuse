@@ -70,8 +70,11 @@ const workingtimes = () => {
         }
         try {
             if (start!="" && end!="")
-                url += `?start=${start}&${end}`;
-            const response = await fetch(url);
+                url += `?start=${start}&end=${end}`;
+            console.log(url);
+            const response = await fetch(url, {
+                method: "GET",
+            });
             if (!response.ok) {
                 throw new Error(`Erreur HTTP! Statut: ${response.status}`);
             }else{
