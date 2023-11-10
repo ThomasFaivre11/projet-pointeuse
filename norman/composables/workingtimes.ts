@@ -1,5 +1,5 @@
 const workingtimes = () => {
-    let url = "http://10.18.206.168:4000/api/";
+    let url = "http://localhost:4000/api/";
     async function createWorkingTimes(user_id: string, start: string, end: string){
         try{
             url += `workingtimes/${user_id}`
@@ -68,23 +68,16 @@ const workingtimes = () => {
         }else {
             console.log("veuillez vérifier les valeurs en paramètres")
         }
-
-        console.log(url);
-
         try {
-            console.log("Requesting:", url); // Debug: vérifiez l'URL
             if (start!="" && end!="")
                 url += `?start=${start}&${end}`;
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`Erreur HTTP! Statut: ${response.status}`);
-            }
-            const result = await response.json();
-            if (result && result.data) {
-                return result.data;
-            } else {
-                console.log("Réponse inattendue:", result);
-                return null;
+            }else{
+                const result = await response.json();
+                console.log(result)
+                return result;
             }
         } catch (e) {
             console.error(e);
