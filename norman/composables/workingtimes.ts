@@ -59,7 +59,7 @@ const workingtimes = () => {
         }
     }
 
-    async function getWorkingTime(user_id: string, workingtime_id: string){
+    async function getWorkingTime(user_id: string, workingtime_id: string, start: string, end: string){
 
         if (user_id != "" && workingtime_id != ""){
             url += `workingtimes/${user_id}/${workingtime_id}`;
@@ -73,6 +73,8 @@ const workingtimes = () => {
 
         try {
             console.log("Requesting:", url); // Debug: vérifiez l'URL
+            if (start!="" && end!="")
+                url += `?start=${start}&${end}`;
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`Erreur HTTP! Statut: ${response.status}`);
