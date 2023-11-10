@@ -53,10 +53,10 @@ const workteams = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const allTeams = await response.json();
-            console.log(allTeams)
+            // console.log(allTeams)
             tab_teams = await order_teams_by_user(allTeams)
             console.log(tab_teams)
-            return allTeams;
+            return tab_teams;
         } catch (e) {
             console.error('Error fetching data: ', e);
         }

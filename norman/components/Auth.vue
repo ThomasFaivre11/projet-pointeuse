@@ -10,7 +10,7 @@ const user = userModule();
 const auth = useAuth();
 const creation_utilisateur = async () => {
 	try {
-    await user.createUser('employee', signInData.username, signInData.email, signInData.password);
+    await user.createUser('employee', signInData.username, signInData.email, signInData.password, "connexion");
   }catch (e) {
     console.log(e)
   }
