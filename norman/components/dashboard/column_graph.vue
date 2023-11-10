@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import id_manager_module from '../../composables/user_token';
 import token_mod from '../../composables/useAuth';
+import get_role from '../../composables/useAuth';
+
+const role = get_role();
 
 const module_check_token = token_mod();
 const module_token = id_manager_module();
@@ -57,7 +60,7 @@ onMounted(() => {
 
 <template>
 	<div class="dashboard-container">
-		<div class="button-container">
+		<div v-if="this.role === `employee`" class="button-container">
 			<button class="clock-button launch">Démarrer</button>
 			<button class="clock-button stop">Stop</button>
 		</div>
@@ -88,7 +91,7 @@ onMounted(() => {
 
 	.button-container {
 		position: fixed;
-		left: 20px;
+		right: 20px;
 		top: 20px;
 		.clock-button {
 			display: flex;

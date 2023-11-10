@@ -25,6 +25,7 @@ export default {
 				nav: false,
 				page: false,
 			},
+			role: useAuth().get_role(),
 		};
 	},
 	mounted: function () {
@@ -113,7 +114,7 @@ export default {
 					<div class="overflow"></div>
 					<span>Mon Profil</span>
 				</li>
-				<li :class="{ active: this.Crud.nav }" @click="interloader(false, false, false, true)">
+				<li v-if="this.role !== `employee`" :class="{ active: this.Crud.nav }" @click="interloader(false, false, false, true)">
 					<span class="line"></span>
 					<div class="overflow"></div>
 					<span>CRUD</span>
