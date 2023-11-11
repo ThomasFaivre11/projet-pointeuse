@@ -27,10 +27,20 @@ const workingtimes = () => {
 
     async function updateWorkingTime(user_id: string, start: string, end: string){
         try{
-            const dynamic_url = url+`workingtimes/${user_id}`;
-            const wtData = {
-                start: `${start}`,
-                end: `${end}`
+            let dynamic_url = url;
+            let wtData = {};
+            if (start!=""){
+                dynamic_url += `workingtimes/${user_id}`;
+                wtData = {
+                    start: `${start}`,
+                    end: `${end}`
+                }
+            } else {
+                dynamic_url += `workingtimes/`;
+                wtData = {
+                    user_id: `${user_id}`,
+                    end: `${end}`
+                }
             }
             const response = await fetch(dynamic_url, {
                 method: "PUT",

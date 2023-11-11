@@ -216,12 +216,20 @@ const startClock = async () => {
   if (userClock.data.length==0){
     // Créer une nouvelle clock
     await clock().createClock(JSON.parse(localStorage.getItem("user_token")).user_id, nowDate, true);
+    await workingtimes().createWorkingTimes(JSON.parse(localStorage.getItem("user_token")).user_id, nowDate, "");
   } else {
-    // Mettre à jour la clock
-    await clock().updateClock(userClock.data[0].id, nowDate, true);
+    if (!userClock.data[0].status){ // Si status = false
+      // Mettre à jour la clock
+      await clock().updateClock(userClock.data[0].id, nowDate, true);
+      await workingtimes().createWorkingTimes(JSON.parse(localStorage.getItem("user_token")).user_id, nowDate, "");
+    } else {
+      // Sinon rien, clock déjà en cours
+      // alert ?
+      console.log("clock déjà en cours");
+    }
   }
   // Création du workingtime
-  await workingtimes().createWorkingTimes(JSON.parse(localStorage.getItem("user_token")).user_id, nowDate, "");
+  //await workingtimes().createWorkingTimes(JSON.parse(localStorage.getItem("user_token")).user_id, nowDate, "");
 }
 /**
  * Méthode permettant de pointer, finir un workingtime
@@ -232,6 +240,23 @@ const startClock = async () => {
 const endClock = async () => {
   const now = new Date();
   const nowDate = now.toISOString().slice(0, 19);
+  const user_id = JSON.parse(localStorage.getItem("user_token")).user_id;
+  const userClock = await clock().getClockByUser(user_id);
+  if (userClock.data.length==0){
+    // Créer une nouvelle clock
+    await clock().createClock(user_id, nowDate, false);
+    await workingtimes().updateWorkingTime(user_id, "", nowDate);
+  } else {
+    if (userClock.data[0].status){
+      // Mettre à jour la clock et le workingtime
+      await clock().updateClock(userClock.data[0].id, nowDate, false);
+      await workingtimes().updateWorkingTime(user_id, "", nowDate);
+    } else {
+      console.log("pas de clock en cours");
+    }
+  }
+  // Update workingtime
+  // await workingtimes().updateWorkingTime(user_id, "", nowDate);
 }
 onMounted(async () => {
   await dataChart();
