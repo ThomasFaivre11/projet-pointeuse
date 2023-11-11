@@ -45,12 +45,41 @@ const clock = () => {
 			const response = await fetch(dynamic_url, {
 				method: 'GET',
 			});
-			let res = await response.json();
-			response.ok? console.log('clock est get\n'+res.data) : console.log('problème get du clock : '+response);
-			return
+			if (!response.ok) {
+				throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+			} else {
+				console.log('clock envoyé');
+			}
+			return await response.json();
 		} catch (e) {
 			console.log(e);
 			console.log('problème get du clock');
+		}
+	}
+
+	async function updateClock(id: string, time: string, status: boolean) {
+		try {
+			const dynamic_url = url+`/${id}`;
+			const clockData = {
+				time: `${time}`,
+				status: `${status}`
+			}
+			const response = await fetch(dynamic_url, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({clock: clockData}),
+
+			});
+			if (!response.ok) {
+				throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+			} else {
+				console.log('clock mis à jour');
+			}
+		} catch (e){
+			console.log(e);
+			console.log("Problème lors de la mise à jour d'un clock !");
 		}
 	}
 
@@ -58,6 +87,7 @@ const clock = () => {
 		createClock,
 		deleteClock,
 		getClockByUser,
+		updateClock
 	};
 };
 

@@ -6,6 +6,7 @@ import get_role from '../../composables/useAuth';
 const role = get_role();
 import workingtimes from "~/composables/workingtimes";
 import workteams from "~/composables/workteams";
+import clock from "~/composables/clock";
 
 const dates = [];
 const dataWorkingtimes = reactive([]);
@@ -201,16 +202,36 @@ function decimalToTime(decimal) {
   return `${formattedHours}.${formattedMinutes}`;
 }
 
+/**
+ * Méthode permettant de pointer, lancer un workingtime
+ * Si clock non existant pour l'user : Création de ce clock avec un status à true
+ * Si clock existant pour l'user : Mise à jour de `time` et de `status`
+ * Création d'un workingtime avec un start correspondant au `time` du clock
+ */
 const startClock = async () => {
   const now = new Date();
   const nowDate = now.toISOString().slice(0, 19);
-  //console.log(JSON.parse(localStorage.getItem("user_token")).user_id);
-  await clock().createClock(JSON.parse(localStorage.getItem("user_token")).user_id, nowDate, true);
+  const userClock = await clock().getClockByUser(JSON.parse(localStorage.getItem("user_token")).user_id);
+  //console.log(userClock.data[0].id);
+  if (userClock.data.length==0){
+    // Créer une nouvelle clock
+    await clock().createClock(JSON.parse(localStorage.getItem("user_token")).user_id, nowDate, true);
+  } else {
+    // Mettre à jour la clock
+    await clock().updateClock(userClock.data[0].id, nowDate, true);
+  }
+  // Création du workingtime
   await workingtimes().createWorkingTimes(JSON.parse(localStorage.getItem("user_token")).user_id, nowDate, "");
 }
-
+/**
+ * Méthode permettant de pointer, finir un workingtime
+ * Mise à jour de `time` et de `status` du clock de l'user
+ * Mise à jour du `end` du workingtime en cours
+ * TODO
+ */
 const endClock = async () => {
-
+  const now = new Date();
+  const nowDate = now.toISOString().slice(0, 19);
 }
 onMounted(async () => {
   await dataChart();

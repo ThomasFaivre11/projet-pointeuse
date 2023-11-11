@@ -21,6 +21,7 @@ defmodule UsersApiWeb.Router do
     delete "/clocks/:id", ClockController, :delete
     get "/clocks/:user_id", ClockController, :index
     post "/clocks/:user_id", ClockController, :create
+    put "/clocks/:id", ClockController, :update
     ### OK
     post "/workingtimes/:user_id", WorkingtimeController, :create
     delete "/workingtimes/:id", WorkingtimeController, :delete
