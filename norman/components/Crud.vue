@@ -4,18 +4,31 @@ import Users from '@/components/crud/Users.vue';
 import gsap from "gsap";
 import ButtonBlue from "~/components/Button-blue.vue";
 import utilisateur from '../composables/user';
+import equipe from '../composables/workteams';
 
+const workteam = equipe();
 const user_module = utilisateur();
 
-const profilData = reactive({
+
+const all_utilisateur = reactive(await user_module.get_all_users())
+
+
+let profilData = reactive({
+  action: '',
   username: '',
   email: '',
   password: '',
   type: '',
+  name: '',
+  manager: '',
+  participant: '',
 });
 
 export default {
-	data() {
+  mounted() {
+    window.addEventListener('keydown', this.handleEscape);
+  },
+  data() {
 		return {
 			users: true,
 			teams: false,
@@ -24,15 +37,45 @@ export default {
 	},
 	methods: {
     async openModifyDialog(profileData){
-      console.log(profileData)
-      if (profileData.type !== 'employe' && profileData.type !== 'manager'){
-        alert("veuillez vérifier la saisie du role: \n employe OU manager");
+      if (profilData.action === 'create_user'){
+        if (profileData.type !== 'employe' && profileData.type !== 'manager'){
+          alert("veuillez vérifier la saisie du role: \n employe OU manager");
+        }else {
+          await user_module.createUser(profileData.type, profileData.username, profileData.password, profileData.email, '');
+        }
+        this.close();
       }else {
-        await user_module.createUser(profileData.type, profileData.username, profileData.password, profileData.email, '');
+        const participant = this.traitement_des_participant(profileData.participant)
+        await this.traitement_create_team(profileData.manager, participant)
       }
-      this.close();
+
     },
-    open_Window(){
+    // email_manager, email_participant
+    async traitement_create_team(email_manager, email_participant) {
+      all_utilisateur[0].forEach(item => {
+        console.log(item.email)
+          if (item.email === email_manager){
+            const id_manager = item.id;
+          }else {
+
+          }
+      })
+    },
+    traitement_des_participant(chaine){
+      let liste_nom = '';
+      if (chaine.include(",")){
+        liste_nom = chaine.split(',').map(nom => nom.trim());
+      }
+      console.log(liste_nom)
+      return liste_nom
+    },
+    handleEscape(event) {
+      if (event && event.key === 'Escape') {
+        this.close();
+      }
+    },
+    open_Window(action){
+      profilData.action = action;
       const tl = gsap.timeline();
       tl.set(this.$refs.formContainer, { display: 'flex' });
       tl.fromTo(this.$refs.formUser, { yPercent: -100 }, { yPercent: 0, duration: 1, ease: 'power3.out' });
@@ -64,42 +107,74 @@ export default {
 </script>
 
 <template>
-  <div class="form-user" ref="formContainer">
-    <div class="wrapper-close" @click="close" ref="wrapperClose"></div>
-    <form  @submit.prevent="addUser" ref="formUser">
-      <h2>Créer un utilisateur</h2>
-      <div class="form-data">
-        <div class="input-data">
-          <input class="text" type="text" required v-model="profilData.username" />
-          <div class="underline"></div>
-          <label class="text">Identifiant</label>
-        </div>
-      </div>
-      <div class="form-data">
-        <div class="input-data">
-          <input class="text" type="text" required v-model="profilData.email" />
-          <div class="underline"></div>
-          <label class="text">Email</label>
-        </div>
-      </div>
-      <div class="form-data">
-        <div class="input-data">
-          <input class="text" type="password" required v-model="profilData.password" />
-          <div class="underline"></div>
-          <label class="text">Mot de passe</label>
-        </div>
-      </div>
-      <div class="form-data">
-        <div class="input-data">
-          <input class="text" type="text" required v-model="profilData.type" />
-          <div class="underline"></div>
-          <label class="text">Employe / Manager</label>
-        </div>
-      </div>
-      <ButtonBlue text="Créer" @click="this.openModifyDialog(profilData)" />
-    </form>
+  <div v-if="profilData.action === 'create_user'">
+    <div class="form-user" ref="formContainer">
+      <div class="wrapper-close" @click="close" ref="wrapperClose"></div>
+      <form  @submit.prevent="addUser" ref="formUser">
+        <h2 v-if="profilData.action === 'create_user'">Créer un utilisateur</h2>
+          <div class="form-data">
+            <div class="input-data">
+              <input class="text" type="text" required v-model="profilData.username" />
+              <div class="underline"></div>
+              <label class="text">Identifiant</label>
+            </div>
+          </div>
+          <div class="form-data">
+            <div class="input-data">
+              <input class="text" type="text" required v-model="profilData.email" />
+              <div class="underline"></div>
+              <label class="text">Email</label>
+            </div>
+          </div>
+          <div class="form-data">
+            <div class="input-data">
+              <input class="text" type="password" required v-model="profilData.password" />
+              <div class="underline"></div>
+              <label class="text">Mot de passe</label>
+            </div>
+          </div>
+          <div class="form-data">
+            <div class="input-data">
+              <input class="text" type="text" required v-model="profilData.type" />
+              <div class="underline"></div>
+              <label class="text">Employe / Manager</label>
+            </div>
+          </div>
+        <ButtonBlue text="Créer" @click="this.openModifyDialog(profilData)" />
+      </form>
+    </div>
   </div>
 
+  <div v-if="profilData.action === 'create_team'">
+    <div class="form-user" ref="formContainer">
+      <div class="wrapper-close" @click="close" ref="wrapperClose"></div>
+      <form  @submit.prevent="addUser" ref="formUser">
+        <h2 v-if="profilData.action === 'create_team'">Créer une team</h2>
+        <div class="form-data">
+          <div class="input-data">
+            <input class="text" type="text" required v-model="profilData.name" />
+            <div class="underline"></div>
+            <label class="text">Nom de la team</label>
+          </div>
+        </div>
+        <div class="form-data">
+          <div class="input-data">
+            <input class="text" type="text" required v-model="profilData.manager" />
+            <div class="underline"></div>
+            <label class="text">Email du manager</label>
+          </div>
+        </div>
+        <div class="form-data">
+          <div class="input-data">
+            <input class="text" type="text" required v-model="profilData.participant" />
+            <div class="underline"></div>
+            <label class="text">Email de l'employe</label>
+          </div>
+        </div>
+        <ButtonBlue text="Créer" @click="this.openModifyDialog(profilData)" />
+      </form>
+    </div>
+  </div>
 
 	<div class="container-crud">
 		<h2>CRUD</h2>
@@ -108,6 +183,7 @@ export default {
 				<div :class="{ active: this.users }" class="container-crud-items-head-item" @click="changeUsers">users</div>
 				<div :class="{ active: this.teams }" class="container-crud-items-head-item" @click="changeTeams">teams</div>
 				<div class="container-crud-items-head-item" @click="open_Window('create_user')">create user</div>
+				<div class="container-crud-items-head-item" @click="open_Window('create_team')">create team</div>
 			</div>
 			<div class="container-crud-items-data">
 				<Users v-if="this.users" />
@@ -118,7 +194,10 @@ export default {
 </template>
 
 <style scoped lang="scss">
-
+.select {
+  width: 100%;
+  font-size: 12rem;
+}
 .form-user {
   flex-direction: column;
   justify-content: center;

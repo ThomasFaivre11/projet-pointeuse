@@ -2,7 +2,6 @@ import user from './user'
 
 const workteams = () => {
 
-
     let url = "http://localhost:4000/api/workteams";
     async function createWorkTeams(team_name: string, manager_id: string, worker_id: string) {
         const wtData = {
@@ -42,6 +41,10 @@ const workteams = () => {
         }
     }
 
+    async function delete_user_from_workteam(id_user: string, ){
+
+    }
+
     async function get_all_teams() {
         let tab_teams = [];
         const url = 'http://localhost:4000/api/workteams';
@@ -53,9 +56,8 @@ const workteams = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const allTeams = await response.json();
-            // console.log(allTeams)
             tab_teams = await order_teams_by_user(allTeams)
-            console.log(tab_teams)
+            console.log()
             return tab_teams;
         } catch (e) {
             console.error('Error fetching data: ', e);
@@ -65,9 +67,7 @@ const workteams = () => {
 
     async function order_teams_by_user(all_teams: any){
         const data = all_teams.data
-
         let liste_teams = []
-
         let liste_complet_teams = [];
 
         for (let i = 0; i < data.length; i++){
@@ -86,11 +86,15 @@ const workteams = () => {
                 if (team.manager === ""){
                     team.manager = await user().getUser(data[j].manager_id, "", "")
                 }
-                if (liste_teams[i] === data[j].team_name){
-                    team.participant.push(user().getUser(data[j].worker_id, "", ""))
+                if (liste_teams[i] === data[j].team_name && data[j].type !== 'manager'){
+                    const utilisateur = await user().getUser(data[j].worker_id, "", "")
+                    if (utilisateur.data.type !== 'manager'){
+                        team.participant.push(utilisateur)
+                    }else {
+                        console.log("ok")
+                    }
                 }
             }
-
             liste_complet_teams.push(team);
         }
         return liste_complet_teams

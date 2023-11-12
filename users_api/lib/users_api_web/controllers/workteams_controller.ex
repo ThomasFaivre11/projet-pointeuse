@@ -35,7 +35,6 @@ defmodule UsersApiWeb.WorkteamsController do
 
   def delete(conn, %{"id" => id}) do
     workteams = TeamManagement.get_work_teams!(id)
-
     with {:ok, %WorkTeams{}} <- TeamManagement.delete_work_teams(workteams) do
       send_resp(conn, :no_content, "")
     end

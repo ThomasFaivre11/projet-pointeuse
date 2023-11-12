@@ -1,4 +1,3 @@
-import { log } from 'unenv/runtime/node/util';
 import useAuth from './useAuth'
 
 const user = () => {
@@ -98,10 +97,9 @@ const user = () => {
 	async function deleteUser(id: string) {
 		try {
 			const url = base_url + `/${id}`;
-			const resp = fetch(url, {
+			return fetch(url, {
 				method: 'DELETE',
 			});
-			return resp;
 		} catch (e) {
 			console.log('Erreur lors de la suppression de l\'user\n' + e);
 		}

@@ -86,11 +86,22 @@ defmodule UsersApi.Admin do
       {:error, %Ecto.Changeset{}}
 
   """
+  #def update_user(%User{} = user, attrs) do
+  #  user
+  #  |> User.changeset(attrs)
+  #  |> Repo.update()
+  #end
+
   def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
+    changeset =
+      if Map.has_key?(attrs, "password") and attrs["password"] not in ["", nil] do
+        User.password_changeset(user, attrs)
+      else
+        User.changeset(user, Map.drop(attrs, ["password"]))
+      end
+    Repo.update(changeset)
   end
+
 
   @doc """
   Deletes a user.

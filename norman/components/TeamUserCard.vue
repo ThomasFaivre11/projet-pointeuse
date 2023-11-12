@@ -1,49 +1,69 @@
 <script>
 import useAuth from '@/composables/useAuth';
+import user from '../composables/user';
+
+const user_module = user();
 
 export default {
 	data() {
 		return {
-			role: useAuth().get_role(),
+			role: 'manager',// useAuth().get_role(),
 		};
 	},
+	methods: {
+		async upgrade_user(utilisateur) {
+      const short_user = utilisateur.data;
+      await user_module.updateUser(short_user.id, 'manager', short_user.username, '', short_user.email);
+      console.log(utilisateur.data.username);
+    },
+		async remove_user(utilisateur) {
+
+		},
+	},
 	props: {
-		name_user: String, // Propriété pour le nom de l'utilisateur
-		status_user: Boolean, // Propriété pour le statut de l'utilisateur
+		worker: Object,
+		name_user: String,
+		status_user: String,
 	},
 };
 </script>
 
 <template>
-	<div class="card">
-		<img src="../assets/images/user_profil.png" alt="image profil" class="profil_img" />
-		<div class="name_presence">
+	<div class='card'>
+		<img src='../assets/images/user_profil.png' alt='image profil' class='profil_img' />
+		<div class='name_presence'>
 			<h1>{{ name_user }}</h1>
-			<p v-if="status_user">Présent</p>
-			<p v-else class="abs">Absent</p>
+			<p v-if='status_user'>Présent</p>
+			<p v-else class='abs'>Absent</p>
 		</div>
-		<div class="management">
-			<button v-if="this.role !== `employee`"><img src="assets/images/raise_user.png" alt="raise user" class="button_manage" /></button>
-			<button v-if="this.role !== `employee`"><img src="assets/images/remove_user.png" alt="remove user" class="button_manage" /></button>
+		<div class='management'>
+			<button v-if='this.role !== `employe`'><img src='assets/images/raise_user.png' alt='raise user'
+														 class='button_manage' @click='upgrade_user(worker)' />
+			</button>
+			<button v-if='this.role !== `employe`'><img src='assets/images/remove_user.png' alt='remove user'
+														 class='button_manage' @click='remove_user(worker)' /></button>
 		</div>
 	</div>
 </template>
 
-<style scoped lang="scss">
+<style scoped lang='scss'>
 .management {
 	display: flex;
 	margin-left: 10px;
 	align-items: center;
 	justify-content: center;
 }
+
 .button_manage {
 	width: 30px;
 	margin-left: 10px;
 }
+
 .profil_img {
 	width: 50px;
 	height: 100%;
 }
+
 .card {
 	display: flex;
 	border-radius: 15px; /* Ajoutez le bord arrondi ici */
@@ -51,6 +71,7 @@ export default {
 	width: fit-content;
 	padding-right: 10px;
 }
+
 .name_presence {
 	@include GT-America;
 	color: $black;
@@ -58,6 +79,7 @@ export default {
 	padding-top: 5px;
 	padding-left: 15px;
 }
+
 p {
 	color: #1e7e34;
 }
