@@ -1,6 +1,7 @@
 <script>
 import useAuth from '@/composables/useAuth';
 import user from '../composables/user';
+import workteams from "~/composables/workteams";
 
 const user_module = user();
 
@@ -17,13 +18,15 @@ export default {
       console.log(utilisateur.data.username);
     },
 		async remove_user(utilisateur) {
-
+      console.log(utilisateur.data.id)
+      // await workteams().delete_user_from_workteam(utilisateur.data.id, this.team_name)
 		},
 	},
 	props: {
 		worker: Object,
 		name_user: String,
 		status_user: String,
+    team_name: String,
 	},
 };
 </script>

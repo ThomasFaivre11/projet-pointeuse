@@ -20,6 +20,7 @@ console.log(teams)
 			<div class='team'>
 				<TeamUserCard
 					v-for='worker in team.participant' :key='worker.id'
+          :team_name="team.team_name"
 					:worker='worker'
 					:name_user='worker.data.email'
 					:status_user='worker.data.type' />

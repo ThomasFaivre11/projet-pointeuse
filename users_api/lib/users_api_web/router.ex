@@ -31,7 +31,7 @@ defmodule UsersApiWeb.Router do
     put "/workingtimes/", WorkingtimeController, :update_end
     # WorkTeams
     post "/workteams", WorkteamsController, :create
-    delete "/workteams/:id", WorkteamsController, :delete
+    delete "/workteams/:id/:team_name", WorkteamsController, :delete
     get "/workteams/:manager_id", WorkteamsController, :get_by_manager_id
     get "/workteams", WorkteamsController, :index
     get "/searchIdManager/:token", SessionController, :get_manager_id

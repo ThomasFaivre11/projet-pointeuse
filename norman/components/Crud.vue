@@ -5,6 +5,7 @@ import gsap from "gsap";
 import ButtonBlue from "~/components/Button-blue.vue";
 import utilisateur from '../composables/user';
 import equipe from '../composables/workteams';
+import workteams from "../composables/workteams";
 
 const workteam = equipe();
 const user_module = utilisateur();
@@ -43,31 +44,48 @@ export default {
         }else {
           await user_module.createUser(profileData.type, profileData.username, profileData.password, profileData.email, '');
         }
-        this.close();
       }else {
         const participant = this.traitement_des_participant(profileData.participant)
-        await this.traitement_create_team(profileData.manager, participant)
+        const final_object_workteams = await this.traitement_create_team(profileData.manager, participant)
+        for (let j = 0; j < final_object_workteams.liste_user.length; j++){
+          await workteams().createWorkTeams(profileData.name, final_object_workteams.id_manager, final_object_workteams.liste_user[j]);
+        }
       }
-
+      this.close();
     },
     // email_manager, email_participant
     async traitement_create_team(email_manager, email_participant) {
-      all_utilisateur[0].forEach(item => {
-        console.log(item.email)
-          if (item.email === email_manager){
-            const id_manager = item.id;
-          }else {
-
+      const obj_total = {
+        "id_manager": "",
+        "liste_user": [],
+      }
+      for (const item of all_utilisateur[0]) {
+        if (item.email === email_manager) {
+          const id_manager_pre = item.id;
+          const user_manager = await user_module.getUser(id_manager_pre, "", "");
+          console.log(user_manager)
+          obj_total.id_manager = user_manager.data.id;
+        } else {
+          let liste_user = [];
+          for (let k = 0; k < email_participant.length; k++){
+            if (item.email === email_participant[k]){
+             const id_utilisateur = item.id;
+             liste_user.push(id_utilisateur)
+              obj_total.liste_user = liste_user;
+            }
           }
-      })
+        }
+      }
+      return obj_total;
     },
     traitement_des_participant(chaine){
-      let liste_nom = '';
-      if (chaine.include(",")){
+      let liste_nom = [];
+      if (chaine.includes(",")){
         liste_nom = chaine.split(',').map(nom => nom.trim());
+      }else {
+        liste_nom.push(chaine)
+        return liste_nom
       }
-      console.log(liste_nom)
-      return liste_nom
     },
     handleEscape(event) {
       if (event && event.key === 'Escape') {

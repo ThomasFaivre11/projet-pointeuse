@@ -41,8 +41,18 @@ const workteams = () => {
         }
     }
 
-    async function delete_user_from_workteam(id_user: string, ){
-
+    async function delete_user_from_workteam(id_user: string, team_name: string ){
+        try {
+            const response = await fetch(`http://localhost:4000/api/workteams/${id_user}/${team_name}`, {
+                method: 'DELETE',
+                redirect: 'follow',
+            })
+            if (response.ok){
+                console.log("user deleted of teams")
+            }
+        }catch (e){
+            console.log(e)
+        }
     }
 
     async function get_all_teams() {
@@ -104,7 +114,8 @@ const workteams = () => {
     return {
         get_all_teams,
         createWorkTeams,
-        getWorkTeamsByManager
+        getWorkTeamsByManager,
+        delete_user_from_workteam
     };
 };
 
