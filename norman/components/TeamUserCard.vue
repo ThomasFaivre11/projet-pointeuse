@@ -19,7 +19,7 @@ export default {
     },
 		async remove_user(utilisateur) {
       console.log(utilisateur.data.id)
-      // await workteams().delete_user_from_workteam(utilisateur.data.id, this.team_name)
+      await workteams().delete_user_from_workteam(utilisateur.data.id, this.team_name)
 		},
 	},
 	props: {

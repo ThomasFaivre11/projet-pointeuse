@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import gsap from "gsap";
 import ButtonBlue from '@/components/Button-blue.vue';
 import utilisateur from '../../composables/user';
+import workteams from "~/composables/workteams";
 
 
 const user_module = utilisateur();
@@ -11,9 +12,12 @@ const wrapperClose = ref(null);
 const formContainer = ref(null);
 
 const profilData = reactive({
+  action: '',
 	username: '',
 	email: '',
 	password: '',
+  team_name:'',
+  utilisateur: Object,
 });
 
 const users = reactive(await user_module.get_all_users());
@@ -38,12 +42,36 @@ const open = (username, email) => {
 	});
 };
 
+const ajouter_team = async (user) => {
+  profilData.action = "add";
+  profilData.utilisateur = user
+  open(profilData.username, profilData.email)
+}
+
+const update = async (user) => {
+  profilData.action = "update";
+  open(user.username, user.email)
+}
+
 const openModifyDialog = async (user) => {
-  const index = users[0].findIndex(u => u.email === user.email);
-  users[0][index].email = user.email;
-  users[0][index].username = user.username;
-  users[0][index].password = user.password;
-  await user_module.updateUser( users[0][index].id, users[0][index].type, users[0][index].username, users[0][index].password, users[0][index].email,);
+  if (profilData.action === "update"){
+    const index = users[0].findIndex(u => u.email === user.email);
+    users[0][index].email = user.email;
+    users[0][index].username = user.username;
+    users[0][index].password = user.password;
+    await user_module.updateUser( users[0][index].id, users[0][index].type, users[0][index].username, users[0][index].password, users[0][index].email,);
+  }else {
+    let id_manager = '';
+    const all_teams = await workteams().get_all_teams();
+    all_teams.forEach(item => {
+      if (item.team_name === profilData.team_name){
+        id_manager = item.manager.data.id
+      }
+    })
+    if (id_manager !== ''){
+      await workteams().createWorkTeams(profilData.team_name, id_manager, profilData.utilisateur.id);
+    }
+  }
   close()
 };
 
@@ -66,7 +94,7 @@ const deleteUser = async (user) => {
 
 
 <template>
-	<div class="form-user" ref="formContainer">
+	<div v-if="profilData.action === 'update'" class="form-user" ref="formContainer">
 		<div class="wrapper-close" @click="close" ref="wrapperClose"></div>
 		<form ref="formUser" @submit.prevent="addUser">
 			<h2>Modifier un utilisateur</h2>
@@ -94,6 +122,22 @@ const deleteUser = async (user) => {
 			<ButtonBlue text="Modifier" @click="openModifyDialog(profilData)" />
 		</form>
 	</div>
+
+
+  <div v-if="profilData.action === 'add'" class="form-user" ref="formContainer">
+		<div class="wrapper-close" @click="close" ref="wrapperClose"></div>
+		<form ref="formUser" @submit.prevent="addUser">
+			<h2>Ajouter un user à une team</h2>
+			<div class="form-data">
+				<div class="input-data">
+					<input class="text" type="text" required v-model="profilData.team_name" />
+					<div class="underline"></div>
+					<label class="text">Nom de la Team</label>
+				</div>
+			</div>
+			<ButtonBlue text="Ajouter" @click="openModifyDialog(profilData)" />
+		</form>
+	</div>
 	<table>
 		<caption>
 			Table des Users
@@ -112,8 +156,9 @@ const deleteUser = async (user) => {
         <td>{{ user.email }}</td>
         <td>{{ user.type }}</td>
         <td class="button-container">
-          <button class="modify-button" @click="open(user.username, user.email)">Modifier</button>
+          <button class="modify-button" @click="update(user)">Modifier</button>
           <button class="delete-button" @click="deleteUser(user)">Supprimer</button>
+          <button class="add_button" @click="ajouter_team(user)">Add Team</button>
         </td>
       </tr>
 		</tbody>
@@ -198,6 +243,9 @@ table {
 
 			&.modify-button {
 				border-right: 1px solid $darkblue;
+			}
+      &.add_button {
+				border-left: 1px solid $darkblue;
 			}
 
       &.create-button {

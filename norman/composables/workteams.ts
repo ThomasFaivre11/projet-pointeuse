@@ -9,6 +9,7 @@ const workteams = () => {
             manager_id: `${manager_id}`,
             worker_id: `${worker_id}`
         }
+        console.log(wtData)
         const response = await fetch(url, {
             method: 'POST',
             headers: {
