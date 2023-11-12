@@ -1,11 +1,20 @@
 <script setup>
 import ButtonBlue from './Button-blue.vue';
-
+import users from '../composables/user';
 const profilData = reactive({
 	username: '',
 	password: '',
 	email: '',
 });
+
+const update_user = async () =>{
+  const all_users = await users().get_all_users();
+  all_users.forEach(item => {
+    if (item.email === profilData.email){
+      console.log("user updated")
+    }
+  })
+}
 </script>
 
 <template>
@@ -19,7 +28,7 @@ const profilData = reactive({
 					<label class="text">Identifiant</label>
 				</div>
 				<div class="input-data">
-					<input class="text" type="text" required v-model="profilData.password" />
+					<input class="text" type="password" required v-model="profilData.password" />
 					<div class="underline"></div>
 					<label class="text">Mot de passe</label>
 				</div>
@@ -31,7 +40,7 @@ const profilData = reactive({
 					<label class="text">Email</label>
 				</div>
 			</div>
-			<ButtonBlue text="Modifier" />
+			<ButtonBlue text="Modifier" @click="update_user"/>
 		</form>
 	</div>
 </template>
